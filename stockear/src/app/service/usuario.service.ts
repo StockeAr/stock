@@ -1,9 +1,42 @@
 import { Injectable } from '@angular/core';
-
-@Injectable({
-  providedIn: 'root'
-})
+import { auth } from 'firebase/app';
+import { User } from 'firebase';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { first } from 'rxjs/operators';
+@Injectable()
 export class UsuarioService {
+  public user: User;
+  constructor(public afAuth: AngularFireAuth) { }
+  async login(email: string, password: string) {
+    try {
+      const result = await this.afAuth.signInWithEmailAndPassword(email, password);
+      return result;
+    }
+    catch (error) {
+      console.log(error);
+    }
 
-  constructor() { }
+  }
+  async register(email: string, password: string) {
+    try {
+      const result = await this.afAuth.createUserWithEmailAndPassword(email, password);
+      return result;
+    }
+    catch (error) {
+      console.log(error);
+    }
+
+  }
+  async logout() {
+    try{
+      await this.afAuth.signOut();
+    }
+    catch (error){
+      console.log(error);
+    }
+    
+  }
+  getUser() {
+    return this.afAuth.authState.pipe(first()).toPromise();
+  }
 }

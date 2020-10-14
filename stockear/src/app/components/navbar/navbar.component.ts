@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {UsuarioService} from '../../service/usuario.service';
-import {Router} from '@angular/router';
+import { UsuarioService } from '../../service/usuario.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
@@ -8,18 +8,21 @@ import {Router} from '@angular/router';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
+  isLogin: boolean;
+  user:any;
+  constructor(private authSvc: UsuarioService, private router: Router) { }
 
-  nombre:string="algo";
-  email:string;
-  isLogin:boolean;
-  foto:string;
-  constructor(private user:UsuarioService, private router:Router) { }
-
-  ngOnInit(): void {
+  async ngOnInit() {
+    console.log('navbar');
+    this.user = await this.authSvc.getUser();
+    if (this.user) {
+      this.isLogin=true;
+      console.log('User->', this.user);
+    }
   }
-  salir(){
+  salir() {
     console.log("salir");
-    //this.user.logout();
+    this.authSvc.logout();
     console.log('ha salido con exito');
     this.router.navigate(['']);
   }

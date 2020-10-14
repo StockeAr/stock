@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuth, AngularFireAuthModule} from '@angular/fire/auth';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -14,6 +16,7 @@ import {Routes, RouterModule}from '@angular/router';
 import {UsuarioService} from './service/usuario.service';
 
 import {AuthGuard} from './guards/auth.guard';
+import { environment } from 'src/environments/environment';
 
 const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -34,7 +37,9 @@ const routes: Routes =[
     AppRoutingModule,
     RouterModule.forRoot(routes),
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireAuthModule,
   ],
   providers: [UsuarioService,AuthGuard],
   bootstrap: [AppComponent]

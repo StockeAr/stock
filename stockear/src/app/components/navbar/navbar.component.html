@@ -10,16 +10,13 @@
       <li class="nav-item active">
         <a class="nav-item nav-link active" [routerLink]="['']">Home<span class="sr-only">(current)</span></a> </li>
       <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['/login']">Ingresar</a>
+        <a class="nav-item nav-link" [routerLink]="['/login']" *ngIf="!isLogin">Ingresar</a>
       </li>
       <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['/registro']">Registrarse</a>
-      </li>
-      <li class="nav-item" *ngIf="isLogin">
-        <a class="nav-item nav-link" [routerLink]="['/prueba']">Privado</a>
+        <a class="nav-item nav-link" [routerLink]="['/registro']" *ngIf="!isLogin">Registrarse</a>
       </li>
       <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['']" (click)="salir()">Salir</a>
+        <a class="nav-item nav-link" [routerLink]="['']" (click)="salir()" *ngIf="isLogin">Salir</a>
       </li>
       <!-- <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
@@ -36,7 +33,7 @@
         <input class="form-control mr-sm-2" type="text" placeholder="Search">
         <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
       </form> -->
-    <img src="{{foto}}" class="rounded-circle" style="width: 30px;">
-    <span>{{nombre}}</span>
+    <img src="{{user.photoURL}}" class="rounded-circle" style="width: 30px;">
+    <span>{{user.email}}</span>
   </div>
 </nav>
