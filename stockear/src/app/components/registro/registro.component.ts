@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
+import { Router } from '@angular/router';
 import {UsuarioService} from '../../service/usuario.service';
 
 @Component({
@@ -13,13 +14,20 @@ export class RegistroComponent implements OnInit {
     email: new FormControl(''),
     password: new FormControl('')
   });
-  constructor(private authSvc:UsuarioService) { }
+  constructor(private authSvc:UsuarioService, private router:Router) { }
 
   ngOnInit(): void {
   }
-  onRegister(){
+  async onRegister(){
     const {email, password}= this.registerForm.value;
-    this.authSvc.register(email,password);
+    try{
+      const user = await this.authSvc.register(email,password);
+      if(user){
+        this.router.navigate(['']);
+      }
+    }
+    catch{}
+    
   }
 
 }

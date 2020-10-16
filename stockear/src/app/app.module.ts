@@ -20,6 +20,7 @@ import { environment } from 'src/environments/environment';
 
 const routes: Routes =[
   {path:'', component:HomeComponent},
+  {path:'home', component:HomeComponent},
   {path:'login', component:LoginComponent},
   {path:'registro', component:RegistroComponent}
   

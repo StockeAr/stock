@@ -5,35 +5,28 @@
     <span class="navbar-toggler-icon"></span>
   </button>
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav mr-auto" id="navbarColor01" *ngIf="user$ | async as user; else login">
       <li class="nav-item active">
-        <a class="nav-item nav-link active" [routerLink]="['']">Home<span class="sr-only">(current)</span></a> </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['/login']" *ngIf="!isLogin">Ingresar</a>
+        <a class="nav-item nav-link active" routerLink="/">Home<span class="sr-only">(current)</span></a> </li>
+      <li class="nav-item" *ngIf="user">
+        <a class="nav-item nav-link" routerLink="/" (click)="salir()">Salir</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['/registro']" *ngIf="!isLogin">Registrarse</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-item nav-link" [routerLink]="['']" (click)="salir()" *ngIf="isLogin">Salir</a>
-      </li>
-      <!-- <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-          <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Separated link</a>
-          </div>
-        </li> -->
     </ul>
-    <!-- <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-      </form> -->
-    <img src="{{user.photoURL}}" class="rounded-circle" style="width: 30px;">
-    <span>{{user.email}}</span>
+    <ng-template #login>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-item nav-link" routerLink="/login">Ingresar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-item nav-link" routerLink="/registro">Registrarse</a>
+        </li>
+      </ul>
+      <!-- <span>{{user?.email}}</span> -->
+    </ng-template>
+    <ul class="navbar-nav mr-sm-2" *ngIf="user$ | async as user">
+      <span>{{user?.email}}</span>
+    </ul>
+    <!-- <img src="{{user.photoURL}}" class="rounded-circle" style="width: 30px;"> -->
   </div>
 </nav>
