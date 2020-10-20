@@ -21,9 +21,9 @@ import { PruebaComponent } from './components/prueba/prueba.component';
 
 const routes: Routes =[
   {path:'', component:HomeComponent},
-  {path:'home', component:HomeComponent},
   {path:'login', component:LoginComponent},
   {path:'registro', component:RegistroComponent},
+  {path:'home', component:HomeComponent},
   {path:'prueba',component:PruebaComponent,canActivate:[AuthGuard]}
 ]
 @NgModule({
