@@ -1,2 +1,58 @@
 <p>prueba works!</p>
 <p>esto es una seccion en teoria privada</p>
+<button type="button" class="btn btn-success" (click)="open(content)">agregar un nuevo item</button>
+<div class="row">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">NOMBRE</th>
+                <th scope="col">APELLIDO</th>
+                <th scope="col">OPCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of collection.data">
+                <th scope="row">{{item.id}}</th>
+                <td>{{item.nombre}}</td>
+                <td>{{item.apellido}}</td>
+                <td>
+                    <button type="button" class="btn btn-warning" (click)='editarOpen(content,item)'>modificar</button>
+                    <button type="button" class="btn btn-danger" (click)='eliminar(item)'>eliminar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <!-- esto es para agregar -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title" *ngIf="!flag">Agregar nuevo algo</h4>
+            <h4 class="modal-title" id="modal-basic-title" *ngIf="flag">Actualizar algo</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]='algoForm'>
+                <fieldset>
+                    <div class="form-group">
+                        <label>Id </label>
+                        <input type="number" formControlName="id" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label >NOMBRE </label>
+                        <input type="text" formControlName="nombre" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label >APELLIDO </label>
+                        <input type="text" formControlName="apellido" class="form-control">
+                    </div>
+                </fieldset>                
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()" *ngIf="!flag" >Agregar</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="editar()"*ngIf="flag">Actualizar</button>
+        </div>
+    </ng-template>
+</div>

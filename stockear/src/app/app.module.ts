@@ -13,11 +13,12 @@ import { LoginComponent } from './components/login/login.component';
 
 import {Routes, RouterModule}from '@angular/router';
 
-import {UsuarioService} from './service/usuario.service';
+import {UsuarioService} from './service/users/usuario.service';
 
 import {AuthGuard} from './guards/auth.guard';
 import { environment } from 'src/environments/environment';
 import { PruebaComponent } from './components/prueba/prueba.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -43,6 +44,7 @@ const routes: Routes =[
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
+    NgbModule,
   ],
   providers: [UsuarioService,AuthGuard],
   bootstrap: [AppComponent]
