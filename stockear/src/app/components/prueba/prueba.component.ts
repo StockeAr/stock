@@ -11,7 +11,7 @@ import { FirebaseServiceService } from '../../service/firebase/firebase-service.
 })
 export class PruebaComponent implements OnInit {
   config: any;
-  collection = { count: 5, data: [] };
+  collection=[];
   closeResult = '';
   algoForm: FormGroup;
   flag: boolean;
@@ -37,7 +37,7 @@ export class PruebaComponent implements OnInit {
     } */
 
     this.firebaseService.getAlgo().subscribe(resp => {
-      this.collection.data = resp.map((e: any) => {
+      this.collection = resp.map((e: any) => {
         return {
           id: e.payload.doc.data().id,
           nombre: e.payload.doc.data().nombre,
