@@ -11,22 +11,25 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegistroComponent } from './components/registro/registro.component';
 import { LoginComponent } from './components/login/login.component';
 
-import {Routes, RouterModule}from '@angular/router';
+//import {Routes, RouterModule}from '@angular/router';
 
-import {UsuarioService} from './service/users/usuario.service';
+import {UsuarioService} from './service/usersFire/usuario.service';
+import {UsersService} from './service/admin/users.service'
 
 import {AuthGuard} from './guards/auth.guard';
 import { environment } from 'src/environments/environment';
 import { PruebaComponent } from './components/prueba/prueba.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-const routes: Routes =[
+import {HttpClientModule} from '@angular/common/http';
+import { UsuariosComponent } from './components/usuarios/usuarios.component'
+/* const routes: Routes =[
   {path:'', component:HomeComponent},
   {path:'login', component:LoginComponent},
   {path:'registro', component:RegistroComponent},
   {path:'home', component:HomeComponent},
   {path:'prueba',component:PruebaComponent,canActivate:[AuthGuard]}
-]
+] */
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,19 +37,21 @@ const routes: Routes =[
     NavbarComponent,
     RegistroComponent,
     LoginComponent,
-    PruebaComponent
+    PruebaComponent,
+    UsuariosComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    RouterModule.forRoot(routes),
+    //RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule,
     AngularFireModule.initializeApp(environment.firebaseConfig),
     AngularFireAuthModule,
     NgbModule,
+    HttpClientModule,
   ],
-  providers: [UsuarioService,AuthGuard],
+  providers: [UsuarioService,AuthGuard,UsersService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

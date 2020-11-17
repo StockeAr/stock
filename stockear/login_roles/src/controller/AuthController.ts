@@ -26,7 +26,8 @@ class AuthController {
             return res.status(400).json({ message: 'Usuario / Contraseña son incorrectos' });
         }
         const token = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecret, { expiresIn: '1h' });
-        res.json({ message: 'Ok', token });
+        const role=user.rol;
+        res.json({ message: 'Ok', token,role });
     };
 
     static changePassword = async (req: Request, res: Response) => {
