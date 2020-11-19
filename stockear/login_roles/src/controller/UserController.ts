@@ -9,7 +9,7 @@ export class UserController {
         const userRepository = getRepository(User);
         let users;
         try {
-            users = await userRepository.find(/* { select: ['id', 'username', 'rol'] } */);
+            users = await userRepository.find( { select: ['id', 'username', 'rol'] } );
         }
         catch (e) {
             res.status(404).json({ mesaje: 'Algo anda mal :v' });

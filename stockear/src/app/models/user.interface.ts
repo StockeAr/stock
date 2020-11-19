@@ -11,3 +11,8 @@ export interface UserResponse {
     userId: number;
     role: Roles;
 }
+export interface UserData{
+    username:string;
+    id:number;
+    rol:string;
+}

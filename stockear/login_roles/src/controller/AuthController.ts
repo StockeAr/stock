@@ -26,8 +26,9 @@ class AuthController {
             return res.status(400).json({ message: 'Usuario / Contraseña son incorrectos' });
         }
         const token = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecret, { expiresIn: '1h' });
-        const role=user.rol;
-        res.json({ message: 'Ok', token,role });
+        const role = user.rol;
+        const userId = user.id;
+        res.json({ message: 'Ok', token, role, userId });
     };
 
     static changePassword = async (req: Request, res: Response) => {
@@ -50,13 +51,13 @@ class AuthController {
         user.password = newPassword;
         const opcionesValidacion = { validationError: { target: false, value: false } };
         const errors = await validate(user, opcionesValidacion);
-        if(errors.length>0){
+        if (errors.length > 0) {
             return res.status(400).json(errors);
         }
         //has de la contraseña
         user.hashPassword();
         userRepository.save(user);
-        res.json({message: 'Se ha cambiado la contraseña'});
+        res.json({ message: 'Se ha cambiado la contraseña' });
     }
 }
 export default AuthController;

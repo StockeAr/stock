@@ -13,7 +13,9 @@ const helper = new JwtHelperService();
 export class AuthService {
 
   private loggedIn = new BehaviorSubject<boolean>(false);
-  private role = new BehaviorSubject<Roles>('ADMIN');
+  private role = new BehaviorSubject<Roles>(null);
+  private userToken = new BehaviorSubject<string>(null);
+
   constructor(private http: HttpClient) {
     this.checkToken();
   }
@@ -26,17 +28,22 @@ export class AuthService {
     return this.role.asObservable();
   }
 
+  get userTokenValue(): string {
+    return this.userToken.getValue();
+  }
+
   login(authData: User): Observable<UserResponse | void> {
     return this.http
-    .post<UserResponse>(`${environment.API_URL}/auth/login`, authData)
+      .post<UserResponse>(`${environment.API_URL}/auth/login`, authData)
       .pipe(
-        map((res: UserResponse) => {
+        map((user: UserResponse) => {
           //console.log('RES -> ', res);          
-          this.saveLocalStorage(res);
+          this.saveLocalStorage(user);
           this.loggedIn.next(true);
-          this.role.next(res.role);
-          return res;
-        }), 
+          this.role.next(user.role);
+          this.userToken.next(user.token);
+          return user;
+        }),
         catchError((err) => this.handleError(err))
       );
   }
@@ -44,6 +51,7 @@ export class AuthService {
     localStorage.removeItem('user');
     this.loggedIn.next(false);
     this.role.next(null);
+    this.userToken.next(null);
   }
 
   private checkToken(): void {
@@ -55,6 +63,7 @@ export class AuthService {
       } else {
         this.loggedIn.next(true);
         this.role.next(user.role);
+        this.userToken.next(user.token);
       }
     }
 

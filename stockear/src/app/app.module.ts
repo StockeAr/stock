@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {AngularFireModule} from '@angular/fire';
-import {AngularFireAuth, AngularFireAuthModule} from '@angular/fire/auth';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,16 +13,18 @@ import { LoginComponent } from './components/login/login.component';
 
 //import {Routes, RouterModule}from '@angular/router';
 
-import {UsuarioService} from './service/usersFire/usuario.service';
-import {UsersService} from './service/admin/users.service'
+import { UsuarioService } from './service/usersFire/usuario.service';
+import { UsersService } from './service/admin/users.service'
 
-import {AuthGuard} from './guards/auth.guard';
+import { AuthGuard } from './guards/auth.guard';
 import { environment } from 'src/environments/environment';
 import { PruebaComponent } from './components/prueba/prueba.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import {HttpClientModule} from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UsuariosComponent } from './components/usuarios/usuarios.component'
+import { AdminIntercetpor } from './interceptors/admin-interceptor';
+
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
   {path:'login', component:LoginComponent},
@@ -51,10 +53,15 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component'
     NgbModule,
     HttpClientModule,
   ],
-  providers: [UsuarioService,AuthGuard,UsersService],
+  providers: [
+    UsuarioService,
+    AuthGuard,
+    UsersService,
+    { provide: HTTP_INTERCEPTORS, useClass: AdminIntercetpor, multi: true },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  FormsModule:FormsModule;
-  ReactiveFormsModule:ReactiveFormsModule;
+  FormsModule: FormsModule;
+  ReactiveFormsModule: ReactiveFormsModule;
 }
