@@ -12,15 +12,17 @@ const helper = new JwtHelperService();
 })
 export class AuthService {
 
-  private loggedIn = new BehaviorSubject<boolean>(false);
+  /* private loggedIn = new BehaviorSubject<boolean>(false);
   private role = new BehaviorSubject<Roles>(null);
-  private userToken = new BehaviorSubject<string>(null);
+  private userToken = new BehaviorSubject<string>(null); */
+
+  private user=new BehaviorSubject<UserResponse>(null);
 
   constructor(private http: HttpClient) {
     this.checkToken();
   }
 
-  get isLogged(): Observable<boolean> {
+  /* get isLogged(): Observable<boolean> {
     return this.loggedIn.asObservable();
   }
 
@@ -30,6 +32,14 @@ export class AuthService {
 
   get userTokenValue(): string {
     return this.userToken.getValue();
+  } */
+
+  get user$():Observable<UserResponse>{
+    return this.user.asObservable();
+  }
+
+  get userValue(){
+    return this.user.getValue();
   }
 
   login(authData: User): Observable<UserResponse | void> {
@@ -39,9 +49,10 @@ export class AuthService {
         map((user: UserResponse) => {
           //console.log('RES -> ', res);          
           this.saveLocalStorage(user);
-          this.loggedIn.next(true);
+          /* this.loggedIn.next(true);
           this.role.next(user.role);
-          this.userToken.next(user.token);
+          this.userToken.next(user.token); */
+          this.user.next(user);
           return user;
         }),
         catchError((err) => this.handleError(err))
@@ -49,9 +60,10 @@ export class AuthService {
   }
   logout(): void {
     localStorage.removeItem('user');
-    this.loggedIn.next(false);
+    /* this.loggedIn.next(false);
     this.role.next(null);
-    this.userToken.next(null);
+    this.userToken.next(null); */
+    this.user.next(null);
   }
 
   private checkToken(): void {
@@ -61,9 +73,10 @@ export class AuthService {
       if (isExpired) {
         this.logout()
       } else {
-        this.loggedIn.next(true);
+        /* this.loggedIn.next(true);
         this.role.next(user.role);
-        this.userToken.next(user.token);
+        this.userToken.next(user.token); */
+        this.user.next(user);
       }
     }
 

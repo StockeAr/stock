@@ -33,8 +33,8 @@
     </ul>
   </div>
 </nav> -->
-<span *ngIf="isAdmin === 'admin'"> ADMIN </span>
-<span *ngIf="auth.isLogged | async"> Estas logeado </span>
+<span > {{isAdmin}} </span>
+<span *ngIf="auth.user$ | async"> Estas logeado </span>
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">StockeAr</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -42,7 +42,7 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav" *ngIf="auth.isLogged | async as user; else login">
+    <ul class="navbar-nav" *ngIf="auth.user$ | async as user; else login">
       <li class="nav-item active">
         <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
       </li>

@@ -10,11 +10,20 @@ export class AdminIntercetpor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
 
-        if (req.url.includes('users')) {
+        /* if (req.url.includes('users')) {
             const authToken = this.auth.userTokenValue;
             const authReq = req.clone({
                 setHeaders: {
                     auth: authToken,
+                },
+            });
+            return next.handle(authReq);
+        } */
+        if (req.url.includes('users')) {
+            const userValue = this.auth.userValue;
+            const authReq = req.clone({
+                setHeaders: {
+                    auth: userValue.token,
                 },
             });
             return next.handle(authReq);

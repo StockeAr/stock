@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { takeUntil } from 'rxjs/operators';
+import { UserResponse } from 'src/app/models/user.interface';
 
 @Component({
   selector: 'app-navbar',
@@ -26,13 +27,22 @@ export class NavbarComponent implements OnInit {
     /* this.subscription.add(
       this.auth.isLogged.subscribe((res) => (this.isLogged = res))
     ); */
-    this.auth.isLogged.pipe(takeUntil(this.destroy$))
-      .subscribe((res) => (this.isLogged = res));
+    //la de abajo es la ultima que se uso
+    /*  this.auth.isLogged.pipe(takeUntil(this.destroy$))
+       .subscribe((res) => (this.isLogged = res));
+ 
+     this.auth.isAdmin.pipe(takeUntil(this.destroy$))
+       .subscribe(res => this.isAdmin = res); */
 
-    this.auth.isAdmin.pipe(takeUntil(this.destroy$))
-      .subscribe(res => this.isAdmin = res);
+    this.auth.user$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((user:UserResponse) => {
+        this.isLogged = true;
+        this.isAdmin = user?.role;
+      });
   }
-  async salir() {
+  //esto era con Firebase
+  /* async salir() {
     try {
       await this.authSvc.logout();
       this.router.navigate(['']);
@@ -40,7 +50,7 @@ export class NavbarComponent implements OnInit {
     catch (error) {
       console.log(error);
     }
-  }
+  } */
 
   ngOndestroy(): void {
     //this.subscription.unsubscribe();

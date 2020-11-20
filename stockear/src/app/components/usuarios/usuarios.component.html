@@ -1,11 +1,16 @@
 <h2>Listado de Empleados</h2>
+<div class="table">
+    <button type="button" class="btn btn-outline-success btn-lg" (click)="open(content,null)">Agregar un nuevo
+        Usuario</button>
+</div>
 <div class="table-responsive">
-    <table class="table">
+    <table class="table table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">id</th>
                 <th scope="col">username</th>
                 <th scope="col">rol</th>
+                <th scope="colgroup">Accciones</th>
             </tr>
         </thead>
         <tbody>
@@ -13,9 +18,55 @@
                 <th scope="row">{{item.id}}</th>
                 <td>{{item.username}}</td>
                 <td>{{item.rol}}</td>
+                <td>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-warning btn-sm"
+                            (click)="open(content,item)">Modificar</button>
+                        <button type="button" class="btn btn-danger btn-sm"
+                            (click)="eliminar(item.id)">Eliminar</button>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
 </div>
 
-<div>{{variable | json}}</div>
+<!-- <div>{{variable | json}}</div> -->
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!flag">Agregar Usuario</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="flag">Actualizar Usuario</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]='userForm'>
+            <fieldset>
+                <div class="form-group">
+                    <label>Username </label>
+                    <input type="text" formControlName="username" class="form-control">
+                    <span *ngIf="checkField('username')">{{userF.errorMessage}}</span>
+                </div>
+                <div class="form-group">
+                    <label>Rol </label>
+                    <input type="text" formControlName="rol" class="form-control">
+                    <span *ngIf="checkField('rol')">{{userF.errorMessage}}</span>
+                </div>
+                <div class="form-group" *ngIf="actionToDo === 'new'">
+                    <label>Password </label>
+                    <input type="password" formControlName="password" class="form-control">
+                    <span *ngIf="checkField('password')">{{userF.errorMessage}}</span>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+            *ngIf="!flag">Agregar</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+            *ngIf="flag">Actualizar</button>
+    </div>
+    {{userF.baseForm.status}} status
+</ng-template>

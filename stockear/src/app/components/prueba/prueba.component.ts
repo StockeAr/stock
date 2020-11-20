@@ -11,7 +11,7 @@ import { FirebaseServiceService } from '../../service/firebase/firebase-service.
 })
 export class PruebaComponent implements OnInit {
   config: any;
-  collection=[];
+  collection = [];
   closeResult = '';
   algoForm: FormGroup;
   flag: boolean;
@@ -20,7 +20,7 @@ export class PruebaComponent implements OnInit {
 
   ngOnInit(): void {
     this.idFirebaseActual = '';
-    this.flag=false;
+    this.flag = false;
     this.algoForm = this.formBuilder.group({
       id: ['', Validators.required],
       nombre: ['', Validators.required],
@@ -66,8 +66,8 @@ export class PruebaComponent implements OnInit {
       nombre: item.nombre,
       apellido: item.apellido
     });
-    this.idFirebaseActual=item.idFirebase;
-    this.flag=true;
+    this.idFirebaseActual = item.idFirebase;
+    this.flag = true;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
@@ -88,7 +88,7 @@ export class PruebaComponent implements OnInit {
   }
 
   open(content) {
-    this.flag=false;
+    this.flag = false;
     this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {

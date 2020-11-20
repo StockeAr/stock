@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormControl, FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
@@ -17,12 +17,14 @@ export class LoginComponent implements OnInit, OnDestroy {
     email: new FormControl(''),
     password: new FormControl('')
   }); */
+
+  private isValidEmail=/\S+@\S+\.\S+/;
   private subscription: Subscription=new Subscription();
   loginFB = this.fb.group({
-    username: [''],
-    password: [''],
+    username: ['',[Validators.required,Validators.pattern(this.isValidEmail)]],
+    password: ['',[Validators.required,Validators.minLength(8)]],
   });
-  constructor(private authSvc: UsuarioService, private router: Router, private auth: AuthService, private fb: FormBuilder) { }
+  constructor(/* private authSvc: UsuarioService, */ private router: Router, private auth: AuthService, private fb: FormBuilder) { }
 
   ngOnInit(): void {
     /* const userData = {
@@ -37,6 +39,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   onlogin(): void {
+    if(this.loginFB.invalid){
+      return;
+    }
     const formValue = this.loginFB.value;
     this.subscription.add(
       this.auth.login(formValue).subscribe(res => {
@@ -44,6 +49,26 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.router.navigate(['']);
         }
       })
+    );
+  }
+
+  getErrorMessage(field:string):string{
+    let message;
+    if(this.loginFB.get(field).errors.required){
+      message='Ingrese un Valor';
+    }else{
+      if(this.loginFB.get(field).hasError('pattern')){
+        const min=this.loginFB.get(field).errors?.min.requiredLength;
+        message=`Este campo requiere un minimo de ${min} caracteres`;
+      }
+    }
+    return message;
+  }
+
+  isValidField(field:string):boolean{
+    return (
+      (this.loginFB.get(field).touched || this.loginFB.get(field).dirty)&&
+      !this.loginFB.get(field).valid
     );
   }
 
