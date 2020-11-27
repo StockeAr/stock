@@ -12,13 +12,13 @@ export class UserController {
             users = await userRepository.find( { select: ['id', 'username', 'rol'] } );
         }
         catch (e) {
-            res.status(404).json({ mesaje: 'Algo anda mal :v' });
+            res.status(404).json({ message: 'Algo anda mal :v' });
         }
         //aqui comprobamos si existe algun usuario
         if (users.length > 0) {
             res.send(users);
         } else {
-            res.status(404).json({ mesaje: 'No Hubo resultado' });
+            res.status(404).json({ message: 'No Hubo resultado' });
         }
     };
     static getById = async (req: Request, res: Response) => {
