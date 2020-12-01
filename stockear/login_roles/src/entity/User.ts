@@ -1,4 +1,4 @@
-import { IsNotEmpty, MinLength, IsEmail, isEmail } from "class-validator";
+import { IsNotEmpty, MinLength, IsEmail, isEmail, IsOptional } from "class-validator";
 import { Entity, PrimaryGeneratedColumn, Column, Unique, CreateDateColumn, UpdateDateColumn, OneToMany } from "typeorm";
 import * as bcrypt from 'bcryptjs';
 import {Producto} from './Producto';
@@ -20,6 +20,11 @@ export class User {
     @IsNotEmpty()
     @MinLength(8)
     password: string;
+
+    @Column()
+    @IsOptional()
+    @IsNotEmpty()
+    resetToken: string;
 
     @Column()
     @IsNotEmpty()
