@@ -38,6 +38,7 @@ export class UserController {
         user.username = username;
         user.password = password;
         user.rol = rol;
+        user.resetToken='vacio';
         //validaciones
         const opcionesValidacion = { validationError: { target: false, value: false } };
         const errors = await validate(user,opcionesValidacion);
@@ -51,7 +52,8 @@ export class UserController {
             user.hashPassword();
             await userRepository.save(user);
         }
-        catch {
+        catch (e){
+            console.log(e);
             return res.status(409).json({ message: 'El nombre de usuario existe' });
         }
         //si todo esta bien mando un mensaje al front

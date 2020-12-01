@@ -5,6 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
 import { validate } from 'class-validator';
 import { checkJwt } from '../middleware/jwt';
+import { transporter} from '../config/mailer';
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
@@ -85,6 +86,17 @@ class AuthController {
 
         try {
             //envio de email
+            await transporter.sendMail({
+                from: '"StockeAr 🤦‍♂️" <proyecto.pp3@gmail.com>', // sender address
+                to: user.username, // list of receivers
+                subject: "Recuperar contraseña ✔", // Subject line
+                //text: "Hello world?", // plain text body
+                html: `
+                    <b>Por favor haga click en el siguiente link o copie en su navegador para completar el proceso</b>
+                    <a href="${verificationLink}">${verificationLink}</a>
+                `, // html body
+              });
+
         } catch (error) {
             emailStatus = error;
             return res.status(400).json({ message: 'algo anda mal :V' });
