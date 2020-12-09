@@ -27,6 +27,11 @@ export class User {
     resetToken: string;
 
     @Column()
+    @IsOptional()
+    @IsNotEmpty()
+    refreshToken: string;
+
+    @Column()
     @IsNotEmpty()
     rol: string;
 

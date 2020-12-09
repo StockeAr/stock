@@ -5,7 +5,7 @@ import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
 import { validate } from 'class-validator';
 import { checkJwt } from '../middleware/jwt';
-import { transporter} from '../config/mailer';
+import { transporter } from '../config/mailer';
 
 class AuthController {
     static login = async (req: Request, res: Response) => {
@@ -27,10 +27,19 @@ class AuthController {
         if (!user.checkPassword(password)) {
             return res.status(400).json({ message: 'Usuario / Contraseña son incorrectos' });
         }
-        const token = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecret, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecret, { expiresIn: '120' });
+        const refreshToken = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecretRefresh, { expiresIn: '5m' });
+
         const role = user.rol;
         const userId = user.id;
-        res.json({ message: 'Ok', token, role, userId });
+
+        user.refreshToken = refreshToken;
+        try {
+            await userRepository.save(user);
+        } catch (error) {
+            return res.status(400).json({ message: 'algo anda mal' });
+        }
+        res.json({ message: 'Ok', token, refreshToken, role /* , userId */ });
     };
 
     static changePassword = async (req: Request, res: Response) => {
@@ -95,7 +104,7 @@ class AuthController {
                     <b>Por favor haga click en el siguiente link o copie en su navegador para completar el proceso</b>
                     <a href="${verificationLink}">${verificationLink}</a>
                 `, // html body
-              });
+            });
 
         } catch (error) {
             emailStatus = error;
@@ -125,15 +134,15 @@ class AuthController {
             jwtPayload = jwt.verify(resetToken, config.jwtSecretReset);
             user = await userRepo.findOneOrFail({ where: { resetToken } });
         } catch (error) {
-            return res.status(401).json({ message: 'algo anda mal'});
+            return res.status(401).json({ message: 'algo anda mal' });
         }
 
-        user.password=newPassword;
+        user.password = newPassword;
 
-        const validationOps={validationError:{tarjet:false,value:false}};
-        const errors=await validate(user,validationOps);
+        const validationOps = { validationError: { tarjet: false, value: false } };
+        const errors = await validate(user, validationOps);
 
-        if(errors.length >0){
+        if (errors.length > 0) {
             return res.status(400).json(errors);
         }
 
@@ -141,10 +150,31 @@ class AuthController {
             user.hashPassword();
             await userRepo.save(user);
         } catch (error) {
-            return res.status(401).json({message:'algo anda mal'});
+            return res.status(401).json({ message: 'algo anda mal' });
         }
 
-        res.json({message:'Contraseña cambiada'});
+        res.json({ message: 'Contraseña cambiada' });
+    }
+
+    static refreshToken = async (req: Request, res: Response) => {
+        const refreshToken = req.headers['refresh'] as string;
+        if (!(refreshToken)) {
+            res.status(400).json({ message: 'algo nada mal :V' });
+        }
+
+        const userRepo = getRepository(User);
+        let user: User;
+        try {
+            const verifyResult = jwt.verify(refreshToken, config.jwtSecretRefresh);
+            const { username } = verifyResult as User;
+            user = await userRepo.findOneOrFail({ where: { username } });
+        } catch (error) {
+            return res.status(400).json({ message: 'algo anda mal :V x2' });
+        }
+
+        const token = jwt.sign({ userId: user.id, username: user.username }, config.jwtSecret, { expiresIn: '120' });
+
+        res.json({ message: 'Ok', token });
     }
 }
 export default AuthController;
