@@ -6,7 +6,7 @@ import { checkJwt } from '../middleware/jwt';
 const router = Router();
 //Obtener todos los usuarios
 router.get('/', [checkJwt, chekRol(['admin'])], UserController.getAll);
-//Obtener un usuarios
+//Obtener un usuario
 router.get('/:id', [checkJwt, chekRol(['admin'])], UserController.getById);
 //Crear un nuevo usuario
 router.post('/', [checkJwt, chekRol(['admin'])], UserController.newUser);
