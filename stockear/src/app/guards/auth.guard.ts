@@ -37,8 +37,9 @@ export class AuthGuard implements CanActivate {
     //return this.auth.isLogged.pipe(take(1),map((islogged:boolean)=>!islogged));
     return this.auth.user$.pipe(
       take(1),
-      map((user: UserResponse) => (!user ? true : false))
+      map((user: UserResponse) => ((user ? true : false)&&((user.role=="admin") ? true:false)))
     );
+
   }
 
 }
