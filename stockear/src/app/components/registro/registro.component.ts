@@ -12,7 +12,8 @@ import {UsuarioService} from '../../service/usersFire/usuario.service';
 export class RegistroComponent implements OnInit {
   registerForm=new FormGroup({
     email: new FormControl(''),
-    password: new FormControl('')
+    password: new FormControl(''),
+    rol: new FormControl('')
   });
   constructor(private authSvc:UsuarioService, private router:Router) { }
 

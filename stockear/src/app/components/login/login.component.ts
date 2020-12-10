@@ -18,7 +18,8 @@ export class LoginComponent implements OnInit, OnDestroy {
     password: new FormControl('')
   }); */
 
-  private isValidEmail=/\S+@\S+\.\S+/;
+  //private isValidEmail=/\S+@\S+\.\S+/;
+  private isValidEmail=/(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
   private subscription: Subscription=new Subscription();
   loginFB = this.fb.group({
     username: ['',[Validators.required,Validators.pattern(this.isValidEmail)]],
@@ -55,11 +56,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   getErrorMessage(field:string):string{
     let message;
     if(this.loginFB.get(field).errors.required){
-      message='Ingrese un Valor';
+      message='Ingrese un valor';
     }else{
       if(this.loginFB.get(field).hasError('pattern')){
-        const min=this.loginFB.get(field).errors?.min.requiredLength;
-        message=`Este campo requiere un minimo de ${min} caracteres`;
+        message="No es un email valido"
+      }else{
+        if(this.loginFB.get(field).hasError('minlength')){
+          const min=this.loginFB.get(field).errors?.minlength.requiredLength;
+          message=`Este campo requiere un minimo de ${min} caracteres`;
+        }
       }
     }
     return message;
@@ -70,6 +75,12 @@ export class LoginComponent implements OnInit, OnDestroy {
       (this.loginFB.get(field).touched || this.loginFB.get(field).dirty)&&
       !this.loginFB.get(field).valid
     );
+  }
+
+  recuperar(email:string){
+    this.subscription.add(
+      this.auth.olvidoPassword(email).subscribe(res => {console.log('emial enviado a ',email)})
+    )
   }
 
   //este es otro modo que se aplico con firebase

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
-import { Form, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FirebaseServiceService } from '../../service/firebase/firebase-service.service';
 
@@ -16,7 +16,22 @@ export class PruebaComponent implements OnInit {
   algoForm: FormGroup;
   flag: boolean;
   idFirebaseActual: string;
-  constructor(private modalService: NgbModal, public formBuilder: FormBuilder, private firebaseService: FirebaseServiceService) { }
+
+  emailPattern:any="(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$";
+  crearFormGroup(){
+    return new FormGroup({
+      mail:new FormControl('',[Validators.required,Validators.minLength(9),Validators.maxLength(57),Validators.pattern(this.emailPattern)]),
+      texto:new FormControl('',[Validators.required]),
+      fecha:new FormControl('',[Validators.required]),
+      numero:new FormControl('',[Validators.required,Validators.minLength(3),Validators.maxLength(8)]),
+      contraseña:new FormControl('',[Validators.required]),
+    })
+  }
+  prueba:FormGroup;
+
+  constructor(private modalService: NgbModal, public formBuilder: FormBuilder, private firebaseService: FirebaseServiceService) { 
+    this.prueba=this.crearFormGroup();
+  }
 
   ngOnInit(): void {
     this.idFirebaseActual = '';
@@ -49,7 +64,33 @@ export class PruebaComponent implements OnInit {
       console.error(error);
     }
     );
+
+    /*
+    NOTA: las validaciones en elos campos tienen las siguiente forma.....
+
+    'nombreCampo':[valor,[validacionSincronica],[validacionAsincronica]]
+    */
   }
+
+  resetForm(){
+    this.prueba.reset();
+  }
+
+  saveData(){
+    if(this.prueba.valid){
+      console.log('Valido : ',this.prueba.value());
+      this.resetForm();
+    }else{
+      console.log('no valido');
+    }
+  }
+  get mail(){return this.prueba.get('mail');}
+  get texto(){return this.prueba.get('texto');}
+  get fecha(){return this.prueba.get('fecha');}
+  get numero(){return this.prueba.get('numero');}
+  get contraseña(){return this.prueba.get('contraseña');}
+
+
 
   eliminar(item: any): void {
     /* var indice = item;

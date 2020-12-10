@@ -40,19 +40,60 @@
                         <input type="number" formControlName="id" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label >NOMBRE </label>
+                        <label>NOMBRE </label>
                         <input type="text" formControlName="nombre" class="form-control">
                     </div>
                     <div class="form-group">
-                        <label >APELLIDO </label>
+                        <label>APELLIDO </label>
                         <input type="text" formControlName="apellido" class="form-control">
                     </div>
-                </fieldset>                
+                </fieldset>
             </form>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()" *ngIf="!flag" >Agregar</button>
-            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="editar()"*ngIf="flag">Actualizar</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+                *ngIf="!flag">Agregar</button>
+            <button type="button" class="btn btn-primary btn-lg btn-block" (click)="editar()"
+                *ngIf="flag">Actualizar</button>
         </div>
     </ng-template>
+
+    <div class="col-md-2"> </div>
+    <div class="row card col-md-8">
+        <form [formGroup]="prueba" (ngSubmit)="saveData()" novalidate>
+            <div class="form-group">
+                <label>Mail: </label>
+                <input class="form-control" formControlName="mail" type="text" placeholder="introducir un mail">
+                <div *ngIf="mail.invalid && (mail.dirty || mail.touched)">
+                    <p *ngIf="mail.errors.pattern">El campo es de tipo mail</p>
+                </div>
+                <div *ngIf="mail.invalid && (mail.dirty || mail.touched) && mail.errors.required">
+                    <p>El campo obligatorio</p>
+                </div>
+                <div *ngIf="mail.invalid && (mail.dirty || mail.touched) && mail.errors.minLength">
+                    <p>El campo debe tener una longitud minima de 9 cracteres</p>
+                </div>
+                <div *ngIf="mail.invalid && (mail.dirty || mail.touched)">
+                    <p *ngIf="mail.errors.maxLength">El campo debe de tener un maximo de 57 caracteres</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Texto: </label>
+                <input class="form-control" formControlName="texto" type="text" placeholder="introducir un mail">
+            </div>
+            <div class="form-group">
+                <label>Fecha: </label>
+                <input class="form-control" formControlName="fecha" type="date" placeholder="introducir un mail">
+            </div>
+            <div class="form-group">
+                <label>Numero: </label>
+                <input class="form-control" formControlName="numero" type="number" placeholder="introducir un mail">
+            </div>
+            <div class="form-group">
+                <label>Contraseña: </label>
+                <input class="form-control" formControlName="mail" type="text" placeholder="introducir un mail">
+            </div>
+            <button type="submit" class="btn-primary">Enviar</button>
+        </form>
+    </div>
 </div>

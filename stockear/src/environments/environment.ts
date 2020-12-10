@@ -14,7 +14,7 @@ export const environment = {
     appId: "1:144917792861:web:856dd83c26cc7440e6e5b4"
   },
   //API_URL:'http://localhost:3000',
-    API_URL:'https://apistockear.herokuapp.com',
+  API_URL:'https://apistockear.herokuapp.com',
 };
 
 /*

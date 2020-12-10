@@ -11,7 +11,7 @@ export class User {
     id: number;
 
     @Column()
-    @MinLength(6)
+    @MinLength(9)
     @IsEmail()
     @IsNotEmpty()
     username: string;

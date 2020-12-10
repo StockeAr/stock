@@ -66,6 +66,11 @@ export class AuthService {
     this.user.next(null);
   }
 
+  olvidoPassword(email:string):Observable<void>{
+    return this.http
+    .put<void>(`${environment.API_URL}/auth/forgot-password`,email)
+  };
+
   private checkToken(): void {
     const user = JSON.parse(localStorage.getItem('user')) || null;
     if (user) {
