@@ -24,7 +24,7 @@
               "@firebase/component",
               "@firebase/auth",
               "@angular/fire/firestore"
-           ],
+            ],
             "outputPath": "dist/stockear",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -34,7 +34,11 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/_redirects"
+              {
+                "glob": "_redirects",
+                "input": "src",
+                "output": "/"
+              }
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
