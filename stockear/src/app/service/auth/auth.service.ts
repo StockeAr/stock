@@ -67,12 +67,10 @@ export class AuthService {
   }
 
   olvidoPassword(username:string):Observable<{}>{
+    console.log('esto me llego :'+username);
     return this.http
     .put(`${environment.API_URL}/auth/forgot-password`,username)
-    /* .pipe(map((user:UserResponse)=>{
-      this.user.next(user);
-      return user;
-    })) */;
+    .pipe();
   };
 
   private checkToken(): void {

@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   recuperar(){
     const username="jt18.pruebas@gmail.com";
-    this.auth.olvidoPassword(username).subscribe(res=>{console.log('envie -> ',username)});
+    this.auth.olvidoPassword(username).subscribe(res=>{console.log('mail: ',res)});
   }
 
   //este es otro modo que se aplico con firebase
