@@ -5,6 +5,7 @@ const app = express();
 const PORT=process.env.PORT || 8080;
 // Serve only the static files form the dist directory
 // Replace the '/dist/<to_your_project_name>'
+
 app.use(express.static(__dirname+'/dist/stockear'));
 
 
