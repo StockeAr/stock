@@ -6,7 +6,6 @@ import { takeUntil } from 'rxjs/operators';
 import { UserData } from 'src/app/models/user.interface';
 import { UsersService } from 'src/app/service/admin/users.service';
 import { BaseFormUser } from 'src/app/utils/base-form-user';
-import { parseJsonText } from 'typescript';
 
 enum Action {
   EDIT = 'edit',

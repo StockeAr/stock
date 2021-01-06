@@ -2,3 +2,11 @@
     color: red;
     font-style: italic;
 }
+
+#link1{
+    color:rgb(0, 162, 255);
+}
+#link1:hover{
+    color:rgb(0, 81, 255);
+    text-decoration: underline;
+}

@@ -66,10 +66,10 @@ export class AuthService {
     this.user.next(null);
   }
 
-  olvidoPassword(username:string):Observable<{}>{
-    console.log('esto me llego :'+username);
+  olvidoPassword(username:any):Observable<any>{
+    console.log('esto me llego :',JSON.stringify(username));
     return this.http
-    .put(`${environment.API_URL}/auth/forgot-password`,username)
+    .put<any>(`${environment.API_URL}/auth/forgot-password`,username)
     .pipe();
   };
 

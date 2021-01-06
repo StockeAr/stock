@@ -1,5 +1,4 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { UsuarioService } from '../../service/usersFire/usuario.service';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
@@ -16,12 +15,10 @@ export class NavbarComponent implements OnInit {
   isLogged = null;
   @Output() toggleSidenav = new EventEmitter<void>();
 
-  public user$: Observable<any> = this.authSvc.afAuth.user;//esto es con firebase
-
   //private subscription: Subscription = new Subscription();
   private destroy$ = new Subject<any>();
 
-  constructor(private authSvc: UsuarioService /*esto es con firebase*/, private router: Router, public auth: AuthService) { }
+  constructor( private router: Router, public auth: AuthService) { }
 
   ngOnInit() {
     /* this.subscription.add(
@@ -41,16 +38,6 @@ export class NavbarComponent implements OnInit {
         this.isAdmin = user?.role;
       });
   }
-  //esto era con Firebase
-  /* async salir() {
-    try {
-      await this.authSvc.logout();
-      this.router.navigate(['']);
-    }
-    catch (error) {
-      console.log(error);
-    }
-  } */
 
   ngOndestroy(): void {
     //this.subscription.unsubscribe();

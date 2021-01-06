@@ -1,8 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularFireModule } from '@angular/fire';
-import { AngularFireAuth, AngularFireAuthModule } from '@angular/fire/auth';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,7 +11,6 @@ import { LoginComponent } from './components/login/login.component';
 
 //import {Routes, RouterModule}from '@angular/router';
 
-import { UsuarioService } from './service/usersFire/usuario.service';
 import { UsersService } from './service/admin/users.service'
 
 import { AuthGuard } from './guards/auth.guard';
@@ -48,13 +45,10 @@ import { AdminIntercetpor } from './interceptors/admin-interceptor';
     //RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule,
-    AngularFireModule.initializeApp(environment.firebaseConfig),
-    AngularFireAuthModule,
     NgbModule,
     HttpClientModule,
   ],
   providers: [
-    UsuarioService,
     AuthGuard,
     UsersService,
     { provide: HTTP_INTERCEPTORS, useClass: AdminIntercetpor, multi: true },

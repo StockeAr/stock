@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { FirebaseServiceService } from '../../service/firebase/firebase-service.service';
 
 @Component({
   selector: 'app-prueba',
@@ -29,7 +27,7 @@ export class PruebaComponent implements OnInit {
   }
   prueba:FormGroup;
 
-  constructor(private modalService: NgbModal, public formBuilder: FormBuilder, private firebaseService: FirebaseServiceService) { 
+  constructor(private modalService: NgbModal, public formBuilder: FormBuilder) { 
     this.prueba=this.crearFormGroup();
   }
 
@@ -41,29 +39,6 @@ export class PruebaComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required]
     });
-
-    //esto era para crear algos a modo de prueba
-    /* for (var i = 0; i < this.collection.count; i++) {
-      this.collection.data.push({
-        id: i,
-        nombre: 'algo' + i,
-        apellido: 'ritmo' + i
-      });
-    } */
-
-    this.firebaseService.getAlgo().subscribe(resp => {
-      this.collection = resp.map((e: any) => {
-        return {
-          id: e.payload.doc.data().id,
-          nombre: e.payload.doc.data().nombre,
-          apellido: e.payload.doc.data().apellido,
-          idFirebase: e.payload.doc.id
-        }
-      })
-    }, error => {
-      console.error(error);
-    }
-    );
 
     /*
     NOTA: las validaciones en elos campos tienen las siguiente forma.....
@@ -97,7 +72,6 @@ export class PruebaComponent implements OnInit {
     console.log('este es el indice seleccionado ' + indice);
     var borrado = this.collection.data.splice(indice, 1);
     console.log('se ha borrado el item ' + borrado); */
-    this.firebaseService.deleteAlgo(item.idFirebase);
   }
 
   editarOpen(content, item: any) {
@@ -116,7 +90,7 @@ export class PruebaComponent implements OnInit {
     });
   }
 
-  editar() {
+/*   editar() {
     if (this.idFirebaseActual != null || this.idFirebaseActual != undefined) {
       this.firebaseService.updateAlgo(this.idFirebaseActual, this.algoForm.value).then(resp => {
         this.algoForm.reset();
@@ -126,7 +100,7 @@ export class PruebaComponent implements OnInit {
       });
     }
 
-  }
+  } */
 
   open(content) {
     this.flag = false;
@@ -134,18 +108,6 @@ export class PruebaComponent implements OnInit {
       this.closeResult = `Closed with: ${result}`;
     }, (reason) => {
       this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
-
-  guardar(): void {
-    /* this.collection.data.push(this.algoForm.value);
-    this.algoForm.reset();
-    this.modalService.dismissAll(); */
-    this.firebaseService.createAlgo(this.algoForm.value).then(resp => {
-      this.algoForm.reset();
-      this.modalService.dismissAll();
-    }).catch(error => {
-      console.error(error);
     });
   }
 

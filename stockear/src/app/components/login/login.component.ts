@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormControl, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
-import { UsuarioService } from '../../service/usersFire/usuario.service';
+
 
 
 @Component({
@@ -12,20 +13,24 @@ import { UsuarioService } from '../../service/usersFire/usuario.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit, OnDestroy {
-  //este es otro modo que se aplico con firebase
-  /* loginForm = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl('')
-  }); */
 
-  //private isValidEmail=/\S+@\S+\.\S+/;
+
   private isValidEmail=/(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
+
   private subscription: Subscription=new Subscription();
+
   loginFB = this.fb.group({
     username: ['',[Validators.required,Validators.pattern(this.isValidEmail)]],
     password: ['',[Validators.required,Validators.minLength(8)]],
   });
-  constructor(/* private authSvc: UsuarioService, */ private router: Router, private auth: AuthService, private fb: FormBuilder) { }
+
+  
+  olvidoForm=this.fb.group({
+    username:['']
+  });
+  closeResult='';
+
+  constructor( private router: Router, private auth: AuthService, private fb: FormBuilder, private modalService:NgbModal) { }
 
   ngOnInit(): void {
     /* const userData = {
@@ -78,21 +83,25 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   recuperar(){
-    const username="jt18.pruebas@gmail.com";
-    this.auth.olvidoPassword(username).subscribe(res=>{console.log('mail: ',res)});
+    //console.log("form olvido: ",this.olvidoForm.value);
+    this.auth.olvidoPassword(this.olvidoForm.value).subscribe(res=>{window.alert(res.message)});
   }
 
-  //este es otro modo que se aplico con firebase
-  /* async onLoginFirebase() {
-    const { email, password } = this.loginForm.value;
-    try {
-      const user = await this.authSvc.login(email, password);
-      if (user) {
-        this.router.navigate(['']);
-      }
+  open(content) {
+    
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
+      this.closeResult = `Closed with: ${result}`;
+    }, (reason) => {
+      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
+    });
+  }
+  private getDismissReason(reason: any): string {
+    if (reason === ModalDismissReasons.ESC) {
+      return 'by pressing ESC';
+    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      return 'by clicking on a backdrop';
+    } else {
+      return `with: ${reason}`;
     }
-    catch (error) {
-      console.log(error);
-    }
-  } */
+  }
 }
