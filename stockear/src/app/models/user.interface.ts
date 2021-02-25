@@ -1,8 +1,10 @@
-export type Roles = "admin" | "reader";
+export type Roles = "admin" | "empleado";
 
 export interface User {
     username: string;
     password: string;
+    nombre:string;
+    apellid:string;
 }
 
 export interface UserResponse {
@@ -10,6 +12,9 @@ export interface UserResponse {
     token: string;
     userId: number;
     role: Roles;
+    adminId:number;
+    nombre:string;
+    apellido:string;
 }
 export interface UserData{
     username:string;

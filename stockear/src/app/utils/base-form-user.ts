@@ -5,14 +5,18 @@ import { FormBuilder, Validators } from '@angular/forms';
 export class BaseFormUser {
 
 
-    private isValidEmail = /\S+@\S+\.\S+/;
+    //private isValidEmail = /\S+@\S+\.\S+/;
+    private isValidEmail=/(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
+    private isValidPassword=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])([A-Za-z\d$@!%*?&]|[^ ]){8,15}$/;
     errorMessage: null;
 
     constructor(private fb: FormBuilder) { }
     baseForm = this.fb.group({
         username: ['', [Validators.required, Validators.pattern(this.isValidEmail)]],
-        password: ['', [Validators.required, Validators.minLength(8)]],
-        rol: ['', [Validators.required]]
+        password: ['', [Validators.required, Validators.minLength(8),Validators.pattern(this.isValidPassword)]],
+        rol: ['', [Validators.required]],
+        nombre: ['', [Validators.required,Validators.minLength(3)]],
+        apellido: ['', [Validators.required,Validators.minLength(3)]]
     });
 
 
@@ -31,7 +35,7 @@ export class BaseFormUser {
             const minLength=errors?.minLength?.requiredLength;
             const messages={
                 required:'Debe introducir un valor',
-                pattern:'No es un Email valido',
+                pattern:'No es un valor valido',
                 minLength:`Este campo requiere un minimo de ${minLength} caracteres`
             };
             const errorKey =Object.keys(errors).find(Boolean);

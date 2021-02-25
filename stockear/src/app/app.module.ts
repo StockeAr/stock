@@ -21,6 +21,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { UsuariosComponent } from './components/usuarios/usuarios.component'
 import { AdminIntercetpor } from './interceptors/admin-interceptor';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { FilterPipe } from './pipes/filter.pipe';
+import { SortDirective } from './directiva/sort.directive';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -37,7 +41,11 @@ import { AdminIntercetpor } from './interceptors/admin-interceptor';
     RegistroComponent,
     LoginComponent,
     PruebaComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    ForgotPasswordComponent,
+    FooterComponent,
+    FilterPipe,
+    SortDirective,
   ],
   imports: [
     BrowserModule,
@@ -51,7 +59,11 @@ import { AdminIntercetpor } from './interceptors/admin-interceptor';
   providers: [
     AuthGuard,
     UsersService,
-    { provide: HTTP_INTERCEPTORS, useClass: AdminIntercetpor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AdminIntercetpor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

@@ -16,7 +16,7 @@ export class AuthService {
   private role = new BehaviorSubject<Roles>(null);
   private userToken = new BehaviorSubject<string>(null); */
 
-  private user=new BehaviorSubject<UserResponse>(null);
+  private user = new BehaviorSubject<UserResponse>(null);
 
   constructor(private http: HttpClient) {
     this.checkToken();
@@ -34,11 +34,11 @@ export class AuthService {
     return this.userToken.getValue();
   } */
 
-  get user$():Observable<UserResponse>{
+  get user$(): Observable<UserResponse> {
     return this.user.asObservable();
   }
 
-  get userValue(){
+  get userValue() {
     return this.user.getValue();
   }
 
@@ -66,12 +66,19 @@ export class AuthService {
     this.user.next(null);
   }
 
-  olvidoPassword(username:any):Observable<any>{
-    console.log('esto me llego :',JSON.stringify(username));
+  olvidoPassword(username: any): Observable<any> {
+    console.log('esto me llego :', JSON.stringify(username));
     return this.http
-    .put<any>(`${environment.API_URL}/auth/forgot-password`,username)
-    .pipe();
+      .put<any>(`${environment.API_URL}/auth/forgot-password`, username)
+      .pipe();
   };
+
+  register(userData: any): Observable<any> {
+    console.log('esto me llego: ', JSON.stringify(userData));
+    return this.http
+      .post<any>(`${environment.API_URL}/auth/register`, userData)
+      .pipe();
+  }
 
   private checkToken(): void {
     const user = JSON.parse(localStorage.getItem('user')) || null;
@@ -97,7 +104,7 @@ export class AuthService {
 
   private saveLocalStorage(user: UserResponse): void {
     //localStorage.setItem('token', token);
-    const { userId, message, ...rest } = user;
+    const {message, ...rest } = user;
     localStorage.setItem('user', JSON.stringify(rest));
   }
 

@@ -30,7 +30,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   });
   closeResult='';
 
-  constructor( private router: Router, private auth: AuthService, private fb: FormBuilder, private modalService:NgbModal) { }
+  boton:boolean;
+
+  constructor( private router: Router, private auth: AuthService, private fb: FormBuilder, private modalService:NgbModal) { 
+  }
 
   ngOnInit(): void {
     /* const userData = {
@@ -38,6 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       password: '12345678'
     };
     this.auth.login(userData).subscribe(res => console.log('Login')); */
+    this.boton=false;
   }
 
   ngOnDestroy(): void {

@@ -1,11 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserData } from 'src/app/models/user.interface';
 import { UsersService } from 'src/app/service/admin/users.service';
+import { AuthService } from 'src/app/service/auth/auth.service';
 import { BaseFormUser } from 'src/app/utils/base-form-user';
+import {UserResponse} from '../../models/user.interface';
 
 enum Action {
   EDIT = 'edit',
@@ -17,38 +20,62 @@ enum Action {
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.css']
 })
-export class UsuariosComponent implements OnInit, OnDestroy{
+export class UsuariosComponent implements OnInit, OnDestroy {
   variable: UserData[];//aqui guardo los usuarios que vienen de mi api
   userForm: FormGroup;//esto es para el formulario
   flag: boolean;//para los cambios en los textos y botones del cuadro de dialogo
   closeResult = '';//esto es algo defaul del cuadro de dialogo
   idUser: any;//aqui recupero el id del usuario seleccionado
 
+  filterUser='';
+
   actionToDo = Action.NEW;//con esto defino la accion a realizar, es un texto en cuestion
 
-  private destroy$=new Subject<any>();
+  private destroy$ = new Subject<any>();
+  adminId:any;
 
-  constructor(private userSVC: UsersService, private modalService: NgbModal, public formBuilder: FormBuilder, public userF: BaseFormUser) {
+  private isValidEmail=/(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
+  private isValidPassword=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])([A-Za-z\d$@!%*?&]|[^ ]){8,15}$/;
+
+  constructor(private userSVC: UsersService, private modalService: NgbModal, public formBuilder: FormBuilder, public userF: BaseFormUser, private router: Router, public auth:AuthService) {
   }
 
   ngOnInit(): void {
     //this.userSVC.getAll().subscribe((res) => console.log('User: ', res));
+
     this.userSVC.getAll().subscribe((res) => this.variable = res);
     this.userForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      rol: ['', Validators.required],
-      password: ['', Validators.required],
+      username: ['', [Validators.required,Validators.pattern(this.isValidEmail)]],
+      rol: ['', [Validators.required]],
+      password: ['', [Validators.required,Validators.pattern(this.isValidPassword)]],
+      nombre: ['', [Validators.required]],
+      apellido: ['', [Validators.required]]
     });
 
+    this.auth.user$.subscribe((user:UserResponse)=>{
+      this.adminId=user?.userId;
+    })
   }
 
   guardar() {
     const formValue = this.userForm.value;
     if (this.actionToDo == Action.NEW) {
-      this.userSVC.new(formValue).subscribe(res => { console.log('new ', res) });
+      this.userSVC.new(formValue).subscribe((res) => {
+        if (res) {
+          window.alert(res.message);
+          window.location.reload();
+          this.router.navigate(['usuarios']);
+        }
+      });
     } else {
       const userId = this.idUser;
-      this.userSVC.update(userId, formValue).subscribe(res => { console.log('Update ', res) });
+      this.userSVC.update(userId, formValue).subscribe((res) => {
+        if (res) {
+          window.alert(res.message);
+          window.location.reload();
+          this.router.navigate(['usuarios']);
+        }
+      });
     }
   }
 
@@ -56,11 +83,17 @@ export class UsuariosComponent implements OnInit, OnDestroy{
     return this.userF.isValidField(field);
   }
 
-  eliminar(id:number){
-    if(window.confirm('¿Desea Usted eliminar el usuario seleccionado?')){
+  eliminar(id: number) {
+    if (window.confirm('¿Desea Usted eliminar el usuario seleccionado?')) {
       this.userSVC.delete(id)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((res)=>{window.alert(JSON.stringify(res))});
+        .pipe(takeUntil(this.destroy$))
+        .subscribe((res) => {
+          if (res) {
+            window.alert(res.message);
+            window.location.reload();
+            this.router.navigate(['usuarios']);
+          }
+        });
     }
   }
 
@@ -70,16 +103,20 @@ export class UsuariosComponent implements OnInit, OnDestroy{
       this.userForm.setValue({
         username: '',
         rol: '',
-        password: ''
+        password: '',
+        nombre: '',
+        apellido:''
       });
-      this.idUser=null;
+      this.idUser = null;
       this.flag = false;
     } else {
       this.actionToDo = Action.EDIT;
       this.userForm.setValue({
         username: user?.username,
         rol: user?.rol,
-        password: ''
+        password: '',
+        nombre:user?.nombre,
+        apellido:user?.apellido
       });
       this.idUser = user?.id;
       this.flag = true;
@@ -100,9 +137,33 @@ export class UsuariosComponent implements OnInit, OnDestroy{
     }
   }
 
-  ngOnDestroy():void{
+  ngOnDestroy(): void {
     this.destroy$.next({});
     this.destroy$.complete();
+  }
+
+  getErrorMessage(field:string):string{
+    let message;
+    if(this.userForm.get(field).errors.required){
+      message='Ingrese un valor';
+    }else{
+      if(this.userForm.get(field).hasError('pattern')){
+        message="Ingrese un valor Valido";
+      }else{
+        if(this.userForm.get(field).hasError('minlength')){
+          const min=this.userForm.get(field).errors?.minlength.requiredLength;
+          message=`Este campo requiere un minimo de ${min} caracteres`;
+        }
+      }
+    }
+    return message;
+  }
+
+  isValidField(field:string):boolean{
+    return (
+      (this.userForm.get(field).touched || this.userForm.get(field).dirty)&&
+      !this.userForm.get(field).valid
+    );
   }
 
 }

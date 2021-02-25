@@ -13,6 +13,7 @@ import { UserResponse } from 'src/app/models/user.interface';
 export class NavbarComponent implements OnInit {
   isAdmin = null;
   isLogged = null;
+  userD=[];
   @Output() toggleSidenav = new EventEmitter<void>();
 
   //private subscription: Subscription = new Subscription();
@@ -36,6 +37,8 @@ export class NavbarComponent implements OnInit {
       .subscribe((user:UserResponse) => {
         this.isLogged = true;
         this.isAdmin = user?.role;
+        this.userD[0]=user?.nombre;
+        this.userD[1]=user?.apellido;
       });
   }
 

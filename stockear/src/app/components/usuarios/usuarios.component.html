@@ -2,21 +2,30 @@
 <div class="table">
     <button type="button" class="btn btn-outline-success btn-lg" (click)="open(content,null)">Agregar un nuevo
         Usuario</button>
+    <div class="col-12">
+        <div class="form-group">
+            <input type="text" class="form-control" name="filterUser" placeholder="Buscar...." [(ngModel)]="filterUser">
+        </div>
+    </div>
 </div>
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
-                <th scope="col">id</th>
-                <th scope="col">username</th>
-                <th scope="col">rol</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="id">id</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="username">username</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="nombre">nombre</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="apellido">apellido</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="rol">rol</th>
                 <th scope="colgroup">Accciones</th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of variable">
+            <tr *ngFor="let item of variable | filter:filterUser">
                 <th scope="row">{{item.id}}</th>
                 <td>{{item.username}}</td>
+                <td>{{item.nombre}}</td>
+                <td>{{item.apellido}}</td>
                 <td>{{item.rol}}</td>
                 <td>
                     <div class="btn-group" role="group">
@@ -47,7 +56,23 @@
                 <div class="form-group">
                     <label>Username </label>
                     <input type="text" formControlName="username" class="form-control">
-                    <span *ngIf="checkField('username')">{{userF.errorMessage}}</span>
+                    <div class="invalid" *ngIf="isValidField('username')">
+                        {{getErrorMessage("username")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nombre </label>
+                    <input type="text" formControlName="nombre" class="form-control">
+                    <div class="invalid" *ngIf="isValidField('nombre')">
+                        {{getErrorMessage("nombre")}}
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Apellido </label>
+                    <input type="text" formControlName="apellido" class="form-control">
+                    <div class="invalid" *ngIf="isValidField('apellido')">
+                        {{getErrorMessage("apellido")}}
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Rol </label>
@@ -57,7 +82,9 @@
                 <div class="form-group" *ngIf="actionToDo === 'new'">
                     <label>Password </label>
                     <input type="password" formControlName="password" class="form-control">
-                    <span *ngIf="checkField('password')">{{userF.errorMessage}}</span>
+                    <div class="invalid" *ngIf="isValidField('password')">
+                        {{getErrorMessage("password")}}
+                    </div>
                 </div>
             </fieldset>
         </form>

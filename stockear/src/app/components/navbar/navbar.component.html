@@ -1,6 +1,6 @@
 
-<span > {{isAdmin}} </span>
-<span *ngIf="auth.user$ | async"> Estas logeado </span>
+<!-- <span > {{isAdmin}} </span>
+<span *ngIf="auth.user$ | async"> Estas logeado </span> -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">StockeAr</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown"
@@ -9,27 +9,28 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav" *ngIf="auth.user$ | async as user; else login">
+      <li class="nav-item">
+        <a class="nav-link">Bienvenid@: {{userD[0]}} {{userD[1]}}</a>
+      </li>
       <li class="nav-item active">
         <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
       </li>
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link" routerLink="/prueba">Prueba</a>
-      </li>
+      </li> -->
       <li class="nav-item">
         <a class="nav-link" routerLink="/" (click)="onLogout()">Salir</a>
       </li>
-      <li class="nav-item dropdown">
+      <li *ngIf="isAdmin=='admin'" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">
           Empleados
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item nav-item " routerLink="usuarios">Listado</a>
-          <a class="dropdown-item" href="#">Algo</a>
-          <a class="dropdown-item" href="#">Ritmo</a>
+          <a class="dropdown-item" href="#">Ventas</a>
         </div>
       </li>
-
     </ul>
 
     <ng-template #login>
@@ -40,7 +41,6 @@
         <li class="nav-item">
           <a class="nav-item nav-link" routerLink="/registro">Registrarse</a>
         </li>
-
       </ul>
     </ng-template>
     <ng-template #viewAdmin>

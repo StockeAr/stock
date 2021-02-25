@@ -19,14 +19,16 @@ export class AdminIntercetpor implements HttpInterceptor {
             });
             return next.handle(authReq);
         } */
+        
         if (req.url.includes('users')) {
             const userValue = this.auth.userValue;
             const authReq = req.clone({
                 setHeaders: {
-                    auth: userValue.token,
+                    auth: userValue.token
                 },
+                //headers:req.headers.set('admin',userValue.userId.toString())
             });
-            return next.handle(authReq);
+            return next.handle(authReq);   
         }
         return next.handle(req);
     }

@@ -1,4 +1,5 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { stringify } from '@angular/compiler/src/util';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -14,8 +15,11 @@ export class UsersService {
   constructor(private http: HttpClient) { }
 
   getAll(): Observable<UserData[]> {
+    /* let customHeaders=new HttpHeaders().set('admin',adminId);
+    console.log('esto me llego:'+JSON.stringify(customHeaders)); */
+
     return this.http
-      .get<UserData[]>(`${environment.API_URL}/users`)
+      .get<UserData[]>(`${environment.API_URL}/users`/* ,{headers:customHeaders} */)
       .pipe(catchError(this.handlerError));
   }
   getById(userId: number): Observable<User> {
@@ -23,19 +27,19 @@ export class UsersService {
       .get<any>(`${environment.API_URL}/users/${userId}`)
       .pipe(catchError(this.handlerError));
   }
-  new(user: User): Observable<User> {
+  new(user: User): Observable<any> {
     return this.http
-      .post<User>(`${environment.API_URL}/users`, user)
+      .post<any>(`${environment.API_URL}/users`,user)
       .pipe(catchError(this.handlerError));
   }
-  update(userId: number, user: User): Observable<User> {
+  update(userId: number, user: User): Observable<any> {
     return this.http
-      .patch<User>(`${environment.API_URL}/users/${userId}`, user)
+      .patch<any>(`${environment.API_URL}/users/${userId}`, user)
       .pipe(catchError(this.handlerError));
   }
-  delete(userId: number): Observable<{}> {
+  delete(userId: number): Observable<any> {
     return this.http
-      .delete<User>(`${environment.API_URL}/users/${userId}`)
+      .delete<any>(`${environment.API_URL}/users/${userId}`)
       .pipe(catchError(this.handlerError));
   }
 

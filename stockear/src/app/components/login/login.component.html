@@ -1,7 +1,7 @@
-<div class="row">
-    <div class="col-md-6 mx-auto mt-5">
+<div class="row" *ngIf="!boton">
+    <div class="col-md-6 mx-auto mt-5 card">
         <div class="card-body">
-            <h1 class="text-center">Iniciar sesión</h1>
+            <h1 class="text-center card-header">Iniciar sesión</h1>
             <form [formGroup]="loginFB" (ngSubmit)="onlogin()">
                 <div class="form-group">
                     <label for="email">Nombre de Usuario</label>
@@ -21,29 +21,15 @@
                     class="btn btn-primary btn-lg btn-block">Entrar</button>
                 <div class="form-group">
                     <p class="mt-3">¿No tiene una cuenta? <a [routerLink]="['/registro']">Regístrese</a></p>
-                    <p>¿Olvido su contraseña? <a id="link1" type="button" (click)="open(content)">click aqui !!!</a>
-                    </p>
+                    <p>¿Olvido su contraseña? <a id="link1" type="button" (click)="boton=!boton">click aqui !!!</a></p>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
-<ng-template #content let-modal>
-    <form [formGroup]="olvidoForm">
-        <div class="modal-header">
-            <h4>Recuperar su contraseña</h4>
-            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        <div class="modal-body form-group">
-            <fieldset>
-                <input type="text" class="form-control" placeholder="ingrese su email" formControlName="username">
-            </fieldset>
-        </div>
-        <div class="modal-footer">
-            <button type="submit" class="btn btn-submit btn-sm" (click)="recuperar()">Recuperar</button>
-        </div>
-    </form>
-</ng-template>
+<div class="col-md-7 mx-auto mt-5" *ngIf="boton">
+    <div class="card">
+        <app-forgot-password></app-forgot-password>
+        <button (click)="boton=!boton" class="btn btn-secondary btn-sm col align-self-center" id="btn-forgot">volver</button>
+    </div>
+</div>
