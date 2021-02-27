@@ -1,7 +1,7 @@
 export interface VentaEmpleado {
     precio: number; 
     fechaVenta: Date; 
-    user: User; 
+    //user: User; 
     producto: Producto; 
     id: number;
 }
@@ -12,8 +12,4 @@ export interface Producto{
     costo:number;
     cantidad:number;
     minExistencia:number;
-}
-
-export interface User{
-    
 }
