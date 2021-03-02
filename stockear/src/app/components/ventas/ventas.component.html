@@ -1,1 +1,61 @@
-<p>ventas works!</p>
+<h1>Mis Ventas</h1>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Hora</th>
+                <th scope="col">Total</th>
+                <th scope="col">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let v of ventas">
+                <th scope="row">{{v.id}}</th>
+                <td>{{v.fechaVenta | date:"dd/MM/yyyy"}}</td>
+                <td>{{v.fechaVenta | date:"shortTime"}}</td>
+                <td>$ {{v.total}}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-info" (click)="open(content,v.id)">Ver</button>
+                </td>
+        </tbody>
+    </table>
+</div>
+
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Detalle de la venta</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Categoria</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Total Parcial</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let i of ventaInfo">
+                    <th scope="row">{{i.ventaId}}</th>
+                    <td>{{i.producto}}</td>
+                    <td>{{i.categoria}}</td>
+                    <td>$ {{i.costo}}</td>
+                    <td>{{i.cantidad}}</td>
+                    <td>$ {{i.totalParcial}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <p>footer</p>
+    </div>
+</ng-template>

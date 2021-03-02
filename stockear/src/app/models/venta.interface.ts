@@ -1,15 +1,14 @@
-export interface VentaEmpleado {
-    precio: number; 
-    fechaVenta: Date; 
-    //user: User; 
-    producto: Producto; 
-    id: number;
+export interface Venta{
+    id:number;
+    fechaVenta:Date;
+    total:number;    
 }
 
-export interface Producto{
-    id:number;
-    descripcion:string;
+export interface VentaDetalle{
+    ventaId:number;
+    producto:string;
+    categoria:string;
     costo:number;
     cantidad:number;
-    minExistencia:number;
+    totalParcial:number;
 }
