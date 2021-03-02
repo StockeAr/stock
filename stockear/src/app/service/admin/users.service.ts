@@ -19,9 +19,10 @@ export class UsersService {
     console.log('esto me llego:'+JSON.stringify(customHeaders)); */
 
     return this.http
-      .get<UserData[]>(`${environment.API_URL}/users`/* ,{headers:customHeaders} */)
+      .get<UserData[]>(`${environment.API_URL}/users`)
       .pipe(catchError(this.handlerError));
   }
+
   getById(userId: number): Observable<User> {
     return this.http
       .get<any>(`${environment.API_URL}/users/${userId}`)

@@ -13,7 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 
 import { UsersService } from './service/admin/users.service'
 
-import { AuthGuard } from './guards/auth.guard';
+import { AuthGuard } from './guards/auth/auth.guard';
 import { environment } from 'src/environments/environment';
 import { PruebaComponent } from './components/prueba/prueba.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -25,6 +25,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { FooterComponent } from './components/footer/footer.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SortDirective } from './directiva/sort.directive';
+import { VentasComponent } from './components/ventas/ventas.component';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -46,6 +47,7 @@ import { SortDirective } from './directiva/sort.directive';
     FooterComponent,
     FilterPipe,
     SortDirective,
+    VentasComponent,
   ],
   imports: [
     BrowserModule,
