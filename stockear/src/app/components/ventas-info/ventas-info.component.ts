@@ -5,11 +5,11 @@ import { Venta, VentaDetalle } from 'src/app/models/venta.interface';
 import { VentaService } from 'src/app/service/venta/venta.service';
 
 @Component({
-  selector: 'app-ventas',
-  templateUrl: './ventas.component.html',
-  styleUrls: ['./ventas.component.css']
+  selector: 'app-ventas-info',
+  templateUrl: './ventas-info.component.html',
+  styleUrls: ['./ventas-info.component.css']
 })
-export class VentasComponent implements OnInit {
+export class VentasInfoComponent implements OnInit {
 
   ventas: Venta[];
   closeResult = '';

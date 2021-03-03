@@ -25,7 +25,8 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { FooterComponent } from './components/footer/footer.component';
 import { FilterPipe } from './pipes/filter.pipe';
 import { SortDirective } from './directiva/sort.directive';
-import { VentasComponent } from './components/ventas/ventas.component';
+import { VentasInfoComponent } from './components/ventas-info/ventas-info.component';
+import { VentaComponent } from './components/venta/venta.component';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -47,7 +48,8 @@ import { VentasComponent } from './components/ventas/ventas.component';
     FooterComponent,
     FilterPipe,
     SortDirective,
-    VentasComponent,
+    VentasInfoComponent,
+    VentaComponent,
   ],
   imports: [
     BrowserModule,

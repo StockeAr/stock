@@ -8,7 +8,8 @@ import { RegistroComponent } from './components/registro/registro.component';
 import { LoginComponent } from './components/login/login.component';
 import { PruebaComponent } from './components/prueba/prueba.component';
 import { UsuariosComponent } from './components/usuarios/usuarios.component';
-import { VentasComponent } from './components/ventas/ventas.component'
+import { VentasInfoComponent } from './components/ventas-info/ventas-info.component';
+import { VentaComponent } from './components/venta/venta.component'
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
@@ -17,8 +18,9 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'prueba', component: PruebaComponent, canActivate: [AuthGuard] },
   { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard, AdminGuard] },
-  { path: 'ventas', component: VentasComponent, canActivate: [AuthGuard] },
-  { path: '**',redirectTo:'home'}
+  { path: 'venta-info', component: VentasInfoComponent, canActivate: [AuthGuard] },
+  { path: 'venta', component: VentaComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

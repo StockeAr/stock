@@ -2,32 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { Venta, VentaDetalle } from 'src/app/models/venta.interface'
+import { Producto } from 'src/app/models/varios.interface';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
-export class VentaService {
+export class ProductoService {
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Venta[]>{
+  getAll(): Observable<Producto[]> {
     return this.http
-    .get<Venta[]>(`${environment.API_URL}/venta`)
+    .get<Producto[]>(`${environment.API_URL}/producto`)
     .pipe(catchError(this.handlerError))
-  }
-
-  getById(id: number): Observable<VentaDetalle[]>{
-    return this.http
-    .get<VentaDetalle[]>(`${environment.API_URL}/venta/${id}`)
-    .pipe(catchError(this.handlerError));
-  }
-
-  newVenta(myArray:any):Observable<any>{
-    return this.http
-    .post(`${environment.API_URL}/venta`,myArray)
-    .pipe(catchError(this.handlerError));
   }
 
   handlerError(error): Observable<never> {
