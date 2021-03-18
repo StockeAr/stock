@@ -27,6 +27,7 @@ import { FilterPipe } from './pipes/filter.pipe';
 import { SortDirective } from './directiva/sort.directive';
 import { VentasInfoComponent } from './components/ventas-info/ventas-info.component';
 import { VentaComponent } from './components/venta/venta.component';
+import { ProductosComponent } from './components/productos/productos.component';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -50,6 +51,7 @@ import { VentaComponent } from './components/venta/venta.component';
     SortDirective,
     VentasInfoComponent,
     VentaComponent,
+    ProductosComponent,
   ],
   imports: [
     BrowserModule,

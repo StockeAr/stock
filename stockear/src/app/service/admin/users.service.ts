@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { User,UserData } from 'src/app/models/user.interface';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 
 @Injectable({
@@ -43,12 +44,19 @@ export class UsersService {
       .pipe(catchError(this.handlerError));
   }
 
-  handlerError(error): Observable<never> {
-    let errorMessage = 'Error desconocido';
-    if (error) {
-      errorMessage = `Error ${error.message}`;
+  handlerError(err): Observable<never> {
+    let errorMessage = "Ha ocurrido un error al obtener los datos";
+    if (err) {
+      errorMessage=`Error: 
+      code -> ${err.status}
+      message -> ${err.error.message} `;
     }
-    window.alert(errorMessage);
+    console.log(errorMessage);
+    Swal.fire({
+      icon:'error',
+      title:'Opps...',
+      text:err.error.message
+    });
     return throwError(errorMessage);
   }
 }

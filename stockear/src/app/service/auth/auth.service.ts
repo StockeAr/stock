@@ -2,9 +2,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
-import { UserResponse, User, Roles } from 'src/app/models/user.interface';
+import { UserResponse, User } from 'src/app/models/user.interface';
 import { environment } from '../../../environments/environment';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import Swal from 'sweetalert2';
 
 const helper = new JwtHelperService();
 @Injectable({
@@ -67,17 +68,15 @@ export class AuthService {
   }
 
   olvidoPassword(username: any): Observable<any> {
-    console.log('esto me llego :', JSON.stringify(username));
     return this.http
       .put<any>(`${environment.API_URL}/auth/forgot-password`, username)
       .pipe();
   };
 
   register(userData: any): Observable<any> {
-    console.log('esto me llego: ', JSON.stringify(userData));
     return this.http
       .post<any>(`${environment.API_URL}/auth/register`, userData)
-      .pipe();
+      .pipe(catchError(this.handleError));
   }
 
   private checkToken(): void {
@@ -111,9 +110,21 @@ export class AuthService {
   private handleError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
     if (err) {
-      errorMessage = `Error: code ${err.message}`;
+      //console.log(JSON.stringify(err))
+      //errorMessage = `Error: code ${err.error.message}`;
+
+      errorMessage=`Error: 
+      code -> ${err.status}
+      message -> ${err.error.message} `;
+      
+      //errorMessage=`Error: code ${err.message}`;
     }
-    window.alert(errorMessage);
+    console.log(errorMessage);
+    Swal.fire({
+      icon:'error',
+      title:'Opps...',
+      text:err.error.message
+    });
     return throwError(errorMessage);
   }
 

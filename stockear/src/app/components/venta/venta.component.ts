@@ -5,6 +5,7 @@ import { Producto } from 'src/app/models/varios.interface';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { ProductoService } from 'src/app/service/producto/producto.service';
 import { VentaService } from 'src/app/service/venta/venta.service';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-venta',
@@ -20,14 +21,16 @@ export class VentaComponent implements OnInit {
   myArray: {
     idProd: any[],
     cantidad: any[],
-    adminId:number
+    adminId: number
   } = {
       idProd: [],
       cantidad: [],
-      adminId:0
+      adminId: 0
     };
 
-  constructor(private productoSVC: ProductoService, private ventaSVC:VentaService, private fb: FormBuilder, private auth: AuthService) { }
+  filterProd='';
+
+  constructor(private productoSVC: ProductoService, private ventaSVC: VentaService, private fb: FormBuilder, private auth: AuthService) { }
 
   ngOnInit(): void {
     this.productoSVC.getAll().subscribe((res) => this.prod = res);
@@ -64,8 +67,21 @@ export class VentaComponent implements OnInit {
 
   confirmar() {
     if (this.myArray.cantidad.length == this.myArray.idProd.length) {
-      this.ventaSVC.newVenta(this.myArray).subscribe((res)=>console.log(res));
+      //this.ventaSVC.newVenta(this.myArray).subscribe((res)=>console.log(res));
+      swal.fire({
+        title: '¿Desea realizar la venta?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        denyButtonText: 'Atras'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          swal.fire('Realizado', '', 'success');
+        } else if (result.isDenied) {
+          swal.fire('No se realizo la venta', '', 'info');
+        }
+      })
+
     }
   }
-
 }

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
+import Swal from 'sweetalert2';
 
 
 
@@ -56,6 +57,13 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.subscription.add(
       this.auth.login(formValue).subscribe(res => {
         if (res) {
+          Swal.fire({
+            title:'Success',
+            icon:'success',
+            position:'top-end',
+            text:'Bienvenido '+res.nombre+' '+res.apellido,
+            timer:2000
+          });
           this.router.navigate(['']);
         }
       })

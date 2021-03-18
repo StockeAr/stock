@@ -8,18 +8,15 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarNavDropdown">
     <ul class="navbar-nav" *ngIf="auth.user$ | async as user; else login">
-      <li class="nav-item">
+      <!-- <li class="nav-item">
         <a class="nav-link">Bienvenid@: {{userD[0]}} {{userD[1]}}</a>
-      </li>
-      <li class="nav-item active">
+      </li> -->
+      <!-- <li class="nav-item active">
         <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
-      </li>
+      </li> -->
       <!-- <li class="nav-item">
         <a class="nav-link" routerLink="/prueba">Prueba</a>
       </li> -->
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/" (click)="onLogout()">Salir</a>
-      </li>
       <li *ngIf="isAdmin=='admin'" class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown"
           aria-haspopup="true" aria-expanded="false">Empleados</a>
@@ -28,6 +25,9 @@
           <a class="dropdown-item" href="#">Ventas</a>
         </div>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="productos">Productos</a>
+      </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdownMenuLink" role="button"
           aria-haspopup="true" aria-exp="false">Ventas</a>
@@ -35,6 +35,9 @@
           <a class="dropdown-item nav-item " routerLink="venta-info">Mis ventas</a>
           <a class="dropdown-item nav-item " routerLink="venta">Realizar venta</a>
         </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/" (click)="onLogout()">Salir</a>
       </li>
     </ul>
 

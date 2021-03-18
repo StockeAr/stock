@@ -1,0 +1,22 @@
+<div class="container">
+  <br>
+  <p>productos works!</p>
+  <div class="row">
+    <div class="col-sm" *ngFor="let item of productos; index as i">
+      <br>
+      <div class="card">
+        <img src="https://pbs.twimg.com/profile_images/1266515640694824961/6kU_G16L.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">{{item.descripcion}}</h5>
+          <ul class="list-group">
+            <li class="card-text list-group-item">Precio: ${{item.costo}}</li>
+            <li class="card-text list-group-item">Cantidad: {{item.cantidad}}</li>
+            <li class="card-text list-group-item">Min. Existencia: {{item.minExistencia}}</li>
+            <li class="card-text list-group-item">Categoria: {{item.categoria.descripcion}}</li>
+          </ul>
+          <a href="#" class="btn btn-primary">Editar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
