@@ -11,6 +11,7 @@ import { UsuariosComponent } from './components/usuarios/usuarios.component';
 import { VentasInfoComponent } from './components/ventas-info/ventas-info.component';
 import { VentaComponent } from './components/venta/venta.component'
 import { ProductosComponent } from './components/productos/productos.component';
+import { CategoriaComponent } from './components/categoria/categoria.component';
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
@@ -21,7 +22,8 @@ const routes: Routes = [
   { path: 'usuarios', component: UsuariosComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'venta-info', component: VentasInfoComponent, canActivate: [AuthGuard] },
   { path: 'venta', component: VentaComponent, canActivate: [AuthGuard] },
-  {path:'productos',component:ProductosComponent,canActivate:[AuthGuard]},
+  { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
+  { path: 'categoria', component: CategoriaComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

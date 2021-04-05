@@ -28,6 +28,7 @@ import { SortDirective } from './directiva/sort.directive';
 import { VentasInfoComponent } from './components/ventas-info/ventas-info.component';
 import { VentaComponent } from './components/venta/venta.component';
 import { ProductosComponent } from './components/productos/productos.component';
+import { CategoriaComponent } from './components/categoria/categoria.component';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -52,6 +53,7 @@ import { ProductosComponent } from './components/productos/productos.component';
     VentasInfoComponent,
     VentaComponent,
     ProductosComponent,
+    CategoriaComponent,
   ],
   imports: [
     BrowserModule,
