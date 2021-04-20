@@ -13,6 +13,7 @@ import { VentaComponent } from './components/venta/venta.component'
 import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
 
+
 const routes: Routes = [
   { path: '', pathMatch: 'full', component: HomeComponent },
   { path: 'login', component: LoginComponent },
@@ -28,7 +29,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }
