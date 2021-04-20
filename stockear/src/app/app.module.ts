@@ -29,6 +29,7 @@ import { VentasInfoComponent } from './components/ventas-info/ventas-info.compon
 import { VentaComponent } from './components/venta/venta.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 
 /* const routes: Routes =[
   {path:'', component:HomeComponent},
@@ -63,6 +64,12 @@ import { CategoriaComponent } from './components/categoria/categoria.component';
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the app is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerWhenStable:30000'
+    }),
   ],
   providers: [
     AuthGuard,
