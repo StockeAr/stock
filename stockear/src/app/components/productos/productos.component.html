@@ -1,23 +1,84 @@
-<div class="container">
-  <br>
-  <p>productos works!</p>
-  <div class="row">
-    <div class="col-sm" *ngFor="let item of productos; index as i">
-      <br>
-      <div class="card">
-        <img src="assets/chems.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">{{item.descripcion}}</h5>
-          <ul class="list-group">
-            <li class="card-text list-group-item">Precio: ${{item.costo}}</li>
-            <li class="card-text list-group-item">Cantidad: {{item.cantidad}}</li>
-            <li class="card-text list-group-item">Min. Existencia: {{item.minExistencia}}</li>
-            <li class="card-text list-group-item">Categoria: {{item.categoria.descripcion}}</li>
-          </ul>
-          <br>
-          <a href="#" class="btn btn-primary">Editar</a>
+<div class="row">
+  <div class="col-12">
+    <button type="button" class="btn btn-block btn-outline-success" (click)="open(content)">Agregar un
+      producto</button>
+  </div>
+  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12" *ngFor="let item of productos; index as i">
+    <br>
+    <div class="card">
+      <img *ngIf="item.imagen==null" src="assets/chems.jpg" class="card-img-top" alt="error al cargar">
+      <img *ngIf="item.imagen!=null" src={{item.imagen}} alt="error al cargar">
+      <div class="card-body">
+        <h5 class="card-title "><strong>{{item.descripcion | titlecase}}</strong></h5>
+        <ul class="list-group">
+          <li class="text-left list-group-item"><strong>Precio:</strong> $ {{item.costo}}</li>
+          <li class="text-left list-group-item"><strong>Cantidad:</strong> {{item.cantidad}} {{item?.medida?.descripcion || 'unidades'}}</li>
+          <li class="text-left list-group-item"><strong>Min. Existencia:</strong> {{item.minExistencia}} {{item?.medida?.descripcion || 'unidades'}}</li>
+          <li class="text-left list-group-item"><strong>Categoria:</strong> {{item.categoria.descripcion}}</li>
+        </ul>
+        <br>
+        <div class="btn-group btn-block" role="group">
+          <button class="btn btn-warning btn-sm" (click)="open(content,item)">Editar</button>
+          <button class="btn btn-danger btn-sm" (click)="eliminar(item.id)">Eliminar</button>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 *ngIf="edit" class="modal-title">Editar Producto</h4>
+    <h4 *ngIf="!edit" class="modal-title">Agregar Producto</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form [formGroup]="producto">
+
+    <div class="modal-body">
+      <div class="form-group">
+        <label>Descripcion:</label>
+        <input type="text" class="form-control" formControlName="descripcion">
+      </div>
+      <div class="form-group">
+        <label>Cantidad:</label>
+        <input type="number" class="form-control" formControlName="cantidad">
+      </div>
+      <div class="form-group">
+        <label>Precio:</label>
+        <input type="number" step="0.01" class="form-control" formControlName="costo">
+      </div>
+      <div class="form-group">
+        <label>Minima Existencia:</label>
+        <input type="number" class="form-control" formControlName="minExistencia">
+      </div>
+      <div class="form-group">
+        <label>Link de la Imagen</label>
+        <input type="url" class="form-control" formControlName="imagen">
+      </div>
+      <div class="form-group">
+        <label>Categoria:</label>
+        <select class="custom-select" formControlName="categoriaId">
+          <option selected disabled>Seleccione...</option>
+          <option *ngFor="let c of categoria" value={{c.id}}>{{c.descripcion}}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Unidad de Medida:</label>
+        <select class="custom-select" formControlName="medidaId">
+          <option selected disabled>Seleccione...</option>
+          <option *ngFor="let m of medida" value={{m.id}}>{{m.descripcion}}</option>
+        </select>
+      </div>
+    </div>
+    <div *ngIf="edit" class="modal-footer">
+      <button class="btn btn-success btn-block" (click)="guardar()" [disabled]="producto.invalid">Guardar
+        Cambios</button>
+    </div>
+    <div *ngIf="!edit" class="modal-footer">
+      <button class="btn btn-success btn-block" (click)="agregar()" [disabled]="producto.invalid">Guardar
+        Cambios</button>
+    </div>
+  </form>
+</ng-template>

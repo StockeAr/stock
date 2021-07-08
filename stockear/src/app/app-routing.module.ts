@@ -12,10 +12,12 @@ import { VentasInfoComponent } from './components/ventas-info/ventas-info.compon
 import { VentaComponent } from './components/venta/venta.component'
 import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
+import { MedidaComponent } from './components/medida/medida.component';
+import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empleados.component';
 
 
 const routes: Routes = [
-  { path: '', pathMatch: 'full', component: HomeComponent },
+  { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },
   { path: 'home', component: HomeComponent },
@@ -25,6 +27,8 @@ const routes: Routes = [
   { path: 'venta', component: VentaComponent, canActivate: [AuthGuard] },
   { path: 'productos', component: ProductosComponent, canActivate: [AuthGuard] },
   { path: 'categoria', component: CategoriaComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'medida', component: MedidaComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'venta-empleados', component: VentaEmpleadosComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

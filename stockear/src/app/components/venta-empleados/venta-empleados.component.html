@@ -1,0 +1,61 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">FECHA</th>
+                <th scope="col">TOTAL</th>
+                <th scope="col">EMPLEADO</th>
+                <th scope="col">ACCIONES</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let v of ventas">
+                <th scope="row">{{v.id}}</th>
+                <td>{{v.fechaVenta|date:'dd/MM/yyyy, hh:mm:ss aa'}}</td>
+                <td>$ {{v.total}}</td>
+                <td>{{v.user.nombre|titlecase}} {{v.user.apellido|titlecase}}</td>
+                <td>
+                    <button type="button" class="btn btn-sm btn-outline-info"
+                        (click)="open(content,v.ventaProducto)">Ver Detalle</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Detalle de la Venta</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body table-responsive text-center">
+        <table class="table table-bordered table-hover">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Descripcion</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">SubTotal</th>
+                    <th scope="col">Categoria</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let d of detalle">
+                    <th scope="row">{{d.ventaId}}</th>
+                    <td>{{d.producto.descripcion}}</td>
+                    <td>$ {{d.producto.costo}}</td>
+                    <td>{{d.cantidad}} {{d.producto?.medida?.descripcion || 'unidades'}}</td>
+                    <td>$ {{d.totalParcial}}</td>
+                    <td>{{d.producto?.categoria?.descripcion}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" (click)="modal.close('Save click')">Aceptar</button>
+    </div>
+</ng-template>

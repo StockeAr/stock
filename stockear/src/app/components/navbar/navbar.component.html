@@ -22,7 +22,7 @@
           aria-haspopup="true" aria-expanded="false">Empleados</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           <a class="dropdown-item nav-item " routerLink="usuarios">Listado</a>
-          <a class="dropdown-item" href="#">Ventas</a>
+          <a class="dropdown-item" routerLink="venta-empleados">Ventas</a>
         </div>
       </li>
       <li class="nav-item">
@@ -30,6 +30,9 @@
       </li>
       <li *ngIf="isAdmin=='admin'" class="nav-item">
         <a class="nav-link" routerLink="categoria">Categorias</a>
+      </li>
+      <li *ngIf="isAdmin=='admin'" class="nav-item">
+        <a class="nav-link" routerLink="medida">Medidas</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" id="navbarDropdownMenuLink" role="button"

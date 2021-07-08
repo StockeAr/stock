@@ -15,22 +15,51 @@ export class ProductoService {
 
   getAll(): Observable<Producto[]> {
     return this.http
-    .get<Producto[]>(`${environment.API_URL}/producto`)
-    .pipe(catchError(this.handlerError))
+      .get<Producto[]>(`${environment.API_URL}/producto`)
+      .pipe(
+        catchError((err) => this.handlerError(err)
+        )
+      );
   }
 
-  handlerError(err): Observable<never> {
+  new(producto: any): Observable<any> {
+    return this.http
+      .post<any>(`${environment.API_URL}/producto`, producto)
+      .pipe(
+        catchError((err) => this.handlerError(err)
+        )
+      );
+  }
+
+  edit(producto: any, id: any): Observable<any> {
+    return this.http
+      .patch<any>(`${environment.API_URL}/producto/${id}`, producto)
+      .pipe(
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  delete(id: any): Observable<any | void> {
+    return this.http
+      .delete(`${environment.API_URL}/producto/${id}`)
+      .pipe(
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  private handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
+    console.log(err.error.errors);
     if (err) {
-      errorMessage=`Error: 
+      errorMessage = `Error: 
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
     console.log(errorMessage);
     Swal.fire({
-      icon:'error',
-      title:'Opps...',
-      text:err.error.message
+      icon: 'error',
+      title: 'Opps...',
+      text: err.error.message
     });
     return throwError(errorMessage);
   }

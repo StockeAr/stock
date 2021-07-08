@@ -1,0 +1,9 @@
+.card{
+    border-radius: 30px;
+    border-width: 2px;
+    border-color: steelblue;
+}
+.card>img{
+    border-radius: 30px;
+    width: 100%;
+}

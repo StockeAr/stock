@@ -119,7 +119,7 @@ export class AuthService {
       
       //errorMessage=`Error: code ${err.message}`;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     Swal.fire({
       icon:'error',
       title:'Opps...',

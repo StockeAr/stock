@@ -30,14 +30,9 @@ import { VentaComponent } from './components/venta/venta.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { MedidaComponent } from './components/medida/medida.component';
+import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empleados.component';
 
-/* const routes: Routes =[
-  {path:'', component:HomeComponent},
-  {path:'login', component:LoginComponent},
-  {path:'registro', component:RegistroComponent},
-  {path:'home', component:HomeComponent},
-  {path:'prueba',component:PruebaComponent,canActivate:[AuthGuard]}
-] */
 @NgModule({
   declarations: [
     AppComponent,
@@ -55,11 +50,12 @@ import { ServiceWorkerModule } from '@angular/service-worker';
     VentaComponent,
     ProductosComponent,
     CategoriaComponent,
+    MedidaComponent,
+    VentaEmpleadosComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    //RouterModule.forRoot(routes),
     FormsModule,
     ReactiveFormsModule,
     NgbModule,

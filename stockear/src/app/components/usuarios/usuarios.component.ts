@@ -32,9 +32,9 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   actionToDo = Action.NEW;//con esto defino la accion a realizar, es un texto en cuestion
 
   private destroy$ = new Subject<any>();
-  adminId: any;
+  //adminId: any;
 
-  aux:any;
+  //aux: any;
 
   private isValidEmail = /(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
   private isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])([A-Za-z\d$@!%*?&]|[^ ]){8,15}$/;
@@ -54,9 +54,9 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       apellido: ['', [Validators.required]]
     });
 
-    this.auth.user$.subscribe((user: UserResponse) => {
+    /* this.auth.user$.subscribe((user: UserResponse) => {
       this.adminId = user?.userId;
-    })
+    }) */
   }
 
   guardar() {
@@ -65,18 +65,15 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.userSVC.new(formValue).subscribe((res) => {
         if (res) {
           window.alert(res.message);
-          this.modalService.dismissAll(res.message);
+          this.modalService.dismissAll();
           this.ngOnInit();
         }
       });
     } else {
-      const userId = this.idUser;
-      this.userSVC.update(userId, formValue).subscribe((res) => {
+      this.userSVC.update(this.idUser, formValue).subscribe((res) => {
         if (res) {
           window.alert(res.message);
-          /* window.location.reload();
-          this.router.navigate(['usuarios']); */
-          this.modalService.dismissAll(res.message);
+          this.modalService.dismissAll();
           this.ngOnInit();
         }
       });
@@ -94,8 +91,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           if (res) {
             window.alert(res.message);
-            window.location.reload();
-            this.router.navigate(['usuarios']);
+            this.ngOnInit();
           }
         });
     }
@@ -104,6 +100,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   //esto es para abrir el cuadro de dialogo
   open(content, user: any) {
     if (user == null) {
+      this.actionToDo = Action.NEW;
       this.userForm.setValue({
         username: '',
         rol: '',
@@ -144,6 +141,7 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next({});
     this.destroy$.complete();
+    this.modalService.dismissAll();
   }
 
   getErrorMessage(field: string): string {

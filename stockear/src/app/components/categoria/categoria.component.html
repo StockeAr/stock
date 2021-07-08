@@ -1,20 +1,57 @@
-<p>categoria works!</p>
-<button class="btn btn-outline-success">Agregar Categoria</button>
-<br>
-<br>
+
+<h2>Listado de las Categorias</h2>
+<button type="button" class="btn btn-outline-success" (click)="open(content,null)">Agregar Categoria</button>
+<hr>
 <div class="table-responsive">
     <table class="table table-hover table-bordered">
         <thead class="thead-dark">
             <tr>
                 <th>Id</th>
                 <th>Descripción</th>
+                <th>Accionnes</th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let c of categoria">
                 <th scope="row">{{c.id}}</th>
                 <th>{{c.descripcion}}</th>
+                <th>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-warning btn-sm" (click)="open(content,c)">Editar</button>
+                        <button type="button" class="btn btn-danger btn-sm"(click)="eliminar(c.id)">Borrar</button>
+                    </div>
+                </th>
             </tr>
         </tbody>
     </table>
 </div>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="!flag">Agregar Categoria</h4>
+        <h4 class="modal-title" id="modal-basic-title" *ngIf="flag">Actualizar Categoria</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]='catForm'>
+            <fieldset>
+                <div class="form-group">
+                    <label>Descripcion</label>
+                    <input type="text" formControlName="descripcion" class="form-control">
+                    <div class="invalid" *ngIf="isValidField('descripcion')">
+                        {{getErrorMessage("descripcion")}}
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+            *ngIf="!flag">Agregar</button>
+        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+            *ngIf="flag">Actualizar</button>
+    </div>
+
+</ng-template>

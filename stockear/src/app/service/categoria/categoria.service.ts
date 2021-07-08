@@ -16,10 +16,45 @@ export class CategoriaService {
   getAll(): Observable<Categoria[]> {
     return this.http
       .get<Categoria[]>(`${environment.API_URL}/categoria`)
-      .pipe(catchError(this.handlerError))
+      .pipe(
+        catchError((err) => this.handlerError(err)
+        )
+      );
   }
 
-  handlerError(err): Observable<never> {
+  getById(id: number): Observable<Categoria> {
+    return this.http
+      .get<any>(`${environment.API_URL}/categoria/${id}`)
+      .pipe(
+        catchError((err) => this.handlerError(err)
+        )
+      );
+  }
+  new(categoria: any): Observable<any> {
+    return this.http
+      .post<any>(`${environment.API_URL}/categoria`, categoria)
+      .pipe(
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  update(catId: number, categoria: Categoria): Observable<any> {
+    return this.http
+      .patch<any>(`${environment.API_URL}/categoria/${catId}`, categoria)
+      .pipe(
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  delete(catId: number): Observable<any> {
+    return this.http
+      .delete<any>(`${environment.API_URL}/categoria/${catId}`)
+      .pipe(
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  private handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
     if (err) {
       errorMessage = `Error: 

@@ -28,7 +28,7 @@ export class VentaComponent implements OnInit {
       adminId: 0
     };
 
-  filterProd='';
+  filterProd = '';
 
   constructor(private productoSVC: ProductoService, private ventaSVC: VentaService, private fb: FormBuilder, private auth: AuthService) { }
 
@@ -76,7 +76,11 @@ export class VentaComponent implements OnInit {
         denyButtonText: 'Atras'
       }).then((result) => {
         if (result.isConfirmed) {
-          swal.fire('Realizado', '', 'success');
+          this.ventaSVC.newVenta(this.myArray).subscribe(
+            (res) => {
+              swal.fire('Realizado', res?.message, 'success');
+              this.ngOnInit();
+            })
         } else if (result.isDenied) {
           swal.fire('No se realizo la venta', '', 'info');
         }
