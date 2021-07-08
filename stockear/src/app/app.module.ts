@@ -9,8 +9,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegistroComponent } from './components/registro/registro.component';
 import { LoginComponent } from './components/login/login.component';
 
-//import {Routes, RouterModule}from '@angular/router';
-
 import { UsersService } from './service/admin/users.service'
 
 import { AuthGuard } from './guards/auth/auth.guard';
