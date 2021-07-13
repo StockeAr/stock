@@ -7,6 +7,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Categoria } from 'src/app/models/varios.interface';
 import { CategoriaService } from 'src/app/service/categoria/categoria.service';
 import { BaseFormGeneric } from 'src/app/utils/base-form-generic';
+import Swal from 'sweetalert2';
 
 
 enum Action {
@@ -31,7 +32,7 @@ export class CategoriaComponent implements OnInit {
   constructor(private catSVC: CategoriaService, private modalService: NgbModal, private formBuilder: FormBuilder, private router: Router, private baseForm: BaseFormGeneric) { }
 
   ngOnInit(): void {
-    this.catSVC.getAll().subscribe((res) => {this.categoria = res});
+    this.catSVC.getAll().subscribe((res) => { this.categoria = res });
 
     this.catForm = this.formBuilder.group({
       descripcion: ['', [Validators.required, Validators.maxLength(30), Validators.minLength(2)]]
@@ -43,7 +44,11 @@ export class CategoriaComponent implements OnInit {
     if (this.actionToDo == Action.NEW) {
       this.catSVC.new(formValue).subscribe((res) => {
         if (res) {
-          window.alert(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
           this.modalService.dismissAll(res.message);
           this.ngOnInit();
         }
@@ -52,7 +57,11 @@ export class CategoriaComponent implements OnInit {
       const catId = this.idCat;
       this.catSVC.update(catId, formValue).subscribe((res) => {
         if (res) {
-          window.alert(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
           this.modalService.dismissAll(res.message);
           this.ngOnInit();
         }
@@ -70,7 +79,11 @@ export class CategoriaComponent implements OnInit {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {
-            window.alert(res.message);
+            Swal.fire({
+              icon: 'success',
+              title: 'Ok',
+              text: res.message
+            });
             /* window.location.reload();
             this.router.navigate(['usuarios']); */
             this.ngOnInit();

@@ -18,3 +18,11 @@ export interface Producto {
     imagen?: string;
     medida?: Medida;
 }
+
+export interface Negocio {
+    imagen?: string;
+    nombre: string;
+    descripcion?: string;
+    direccion: string;
+    telefono: number
+}

@@ -8,11 +8,8 @@ import { HomeComponent } from './components/home/home.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { RegistroComponent } from './components/registro/registro.component';
 import { LoginComponent } from './components/login/login.component';
-
 import { UsersService } from './service/admin/users.service'
-
 import { AuthGuard } from './guards/auth/auth.guard';
-import { environment } from 'src/environments/environment';
 import { PruebaComponent } from './components/prueba/prueba.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -27,9 +24,11 @@ import { VentasInfoComponent } from './components/ventas-info/ventas-info.compon
 import { VentaComponent } from './components/venta/venta.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
-import { ServiceWorkerModule } from '@angular/service-worker';
 import { MedidaComponent } from './components/medida/medida.component';
 import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empleados.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
+import { MiPerfilComponent } from './components/mi-perfil/mi-perfil.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +49,8 @@ import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empl
     CategoriaComponent,
     MedidaComponent,
     VentaEmpleadosComponent,
+    EstadisticasComponent,
+    MiPerfilComponent,
   ],
   imports: [
     BrowserModule,
@@ -58,12 +59,7 @@ import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empl
     ReactiveFormsModule,
     NgbModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', {
-      enabled: environment.production,
-      // Register the ServiceWorker as soon as the app is stable
-      // or after 30 seconds (whichever comes first).
-      registrationStrategy: 'registerWhenStable:30000'
-    }),
+    NgxChartsModule,
   ],
   providers: [
     AuthGuard,

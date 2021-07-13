@@ -8,6 +8,7 @@ import { UserData } from 'src/app/models/user.interface';
 import { UsersService } from 'src/app/service/admin/users.service';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { BaseFormUser } from 'src/app/utils/base-form-user';
+import Swal from 'sweetalert2';
 import { UserResponse } from '../../models/user.interface';
 
 enum Action {
@@ -64,7 +65,11 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     if (this.actionToDo == Action.NEW) {
       this.userSVC.new(formValue).subscribe((res) => {
         if (res) {
-          window.alert(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
           this.modalService.dismissAll();
           this.ngOnInit();
         }
@@ -72,7 +77,11 @@ export class UsuariosComponent implements OnInit, OnDestroy {
     } else {
       this.userSVC.update(this.idUser, formValue).subscribe((res) => {
         if (res) {
-          window.alert(res.message);
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
           this.modalService.dismissAll();
           this.ngOnInit();
         }
@@ -90,7 +99,11 @@ export class UsuariosComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((res) => {
           if (res) {
-            window.alert(res.message);
+            Swal.fire({
+              icon: 'success',
+              title: 'Ok',
+              text: res.message
+            });
             this.ngOnInit();
           }
         });

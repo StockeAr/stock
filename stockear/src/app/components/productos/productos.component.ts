@@ -5,6 +5,7 @@ import { Producto } from 'src/app/models/varios.interface';
 import { CategoriaService } from 'src/app/service/categoria/categoria.service';
 import { MedidaService } from 'src/app/service/medida/medida.service';
 import { ProductoService } from 'src/app/service/producto/producto.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos',
@@ -14,7 +15,7 @@ import { ProductoService } from 'src/app/service/producto/producto.service';
 export class ProductosComponent implements OnInit, OnDestroy {
 
   productos: Producto[];
-
+  filterProd='';
   producto = this.formB.group({
     cantidad: ['', [Validators.required, Validators.min(1)]],
     descripcion: ['', [Validators.required, Validators.minLength(3)]],
@@ -82,7 +83,11 @@ export class ProductosComponent implements OnInit, OnDestroy {
     const formData = this.producto.value;
     this.prodSVC.edit(formData, this.idProd).subscribe(
       (res) => {
-        window.alert(res?.message);
+        Swal.fire({
+          icon: 'success',
+          title: 'Ok',
+          text: res.message
+        });
         this.producto.reset();
         this.modalService.dismissAll();
         this.ngOnInit();
@@ -94,7 +99,11 @@ export class ProductosComponent implements OnInit, OnDestroy {
     if (window.confirm("¿Esta seguro?")) {
       this.prodSVC.delete(id).subscribe(
         (res) => {
-          window.alert(res?.message)
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
           this.ngOnInit();
         }
       );
@@ -109,7 +118,11 @@ export class ProductosComponent implements OnInit, OnDestroy {
     const formData = this.producto.value;
     this.prodSVC.new(formData).subscribe(
       (res) => {
-        window.alert(res?.message);
+        Swal.fire({
+          icon: 'success',
+          title: 'Ok',
+          text: res.message
+        });
         this.producto.reset();
         this.modalService.dismissAll();
         this.ngOnInit();

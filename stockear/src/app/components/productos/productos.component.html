@@ -2,8 +2,14 @@
   <div class="col-12">
     <button type="button" class="btn btn-block btn-outline-success" (click)="open(content)">Agregar un
       producto</button>
+    <hr>
+    <div class="col-12">
+      <div class="form-group">
+        <input type="text" class="form-control" name="filterUser" placeholder="Buscar...." [(ngModel)]="filterProd" [ngModelOptions]="{standalone: true}">
+      </div>
+    </div>
   </div>
-  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12" *ngFor="let item of productos; index as i">
+  <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12" *ngFor="let item of productos|filter:filterProd:'descrip'">
     <br>
     <div class="card">
       <img *ngIf="item.imagen==null" src="assets/chems.jpg" class="card-img-top" alt="error al cargar">
@@ -12,8 +18,10 @@
         <h5 class="card-title "><strong>{{item.descripcion | titlecase}}</strong></h5>
         <ul class="list-group">
           <li class="text-left list-group-item"><strong>Precio:</strong> $ {{item.costo}}</li>
-          <li class="text-left list-group-item"><strong>Cantidad:</strong> {{item.cantidad}} {{item?.medida?.descripcion || 'unidades'}}</li>
-          <li class="text-left list-group-item"><strong>Min. Existencia:</strong> {{item.minExistencia}} {{item?.medida?.descripcion || 'unidades'}}</li>
+          <li class="text-left list-group-item"><strong>Cantidad:</strong> {{item.cantidad}} {{item?.medida?.descripcion
+            || 'unidades'}}</li>
+          <li class="text-left list-group-item"><strong>Min. Existencia:</strong> {{item.minExistencia}}
+            {{item?.medida?.descripcion || 'unidades'}}</li>
           <li class="text-left list-group-item"><strong>Categoria:</strong> {{item.categoria.descripcion}}</li>
         </ul>
         <br>

@@ -76,7 +76,25 @@ export class AuthService {
   register(userData: any): Observable<any> {
     return this.http
       .post<any>(`${environment.API_URL}/auth/register`, userData)
-      .pipe(catchError(this.handleError));
+      .pipe(
+        catchError((err) => this.handleError(err))
+      )
+  }
+
+  /* mydata(id: any): Observable<any> {
+    return this.http
+      .get<any>(`${environment.API_URL}/auth/mi-perfil/${id}`)
+      .pipe(
+        catchError((err) => this.handleError(err))
+      )
+  } */
+
+  editarPerfil(usuario: any): Observable<any> {
+    return this.http
+      .patch<any>(`${environment.API_URL}/auth/edit`, usuario)
+      .pipe(
+        catchError((err) => this.handleError(err))
+      )
   }
 
   private checkToken(): void {
@@ -103,7 +121,7 @@ export class AuthService {
 
   private saveLocalStorage(user: UserResponse): void {
     //localStorage.setItem('token', token);
-    const {message, ...rest } = user;
+    const { message, ...rest } = user;
     localStorage.setItem('user', JSON.stringify(rest));
   }
 
@@ -113,17 +131,17 @@ export class AuthService {
       //console.log(JSON.stringify(err))
       //errorMessage = `Error: code ${err.error.message}`;
 
-      errorMessage=`Error: 
-      code -> ${err.status}
-      message -> ${err.error.message} `;
-      
+      errorMessage = `Error: 
+      code -> ${err?.status}
+      message -> ${err?.error?.message} `;
+
       //errorMessage=`Error: code ${err.message}`;
     }
     //console.log(errorMessage);
     Swal.fire({
-      icon:'error',
-      title:'Opps...',
-      text:err.error.message
+      icon: 'error',
+      title: 'Opps...',
+      text: err.error.message
     });
     return throwError(errorMessage);
   }

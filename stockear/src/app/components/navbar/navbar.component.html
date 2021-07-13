@@ -11,9 +11,9 @@
       <!-- <li class="nav-item">
         <a class="nav-link">Bienvenid@: {{userD[0]}} {{userD[1]}}</a>
       </li> -->
-      <!-- <li class="nav-item active">
-        <a class="nav-link" routerLink="/">Home <span class="sr-only">(current)</span></a>
-      </li> -->
+      <li *ngIf="isAdmin=='admin'" class="nav-item">
+        <a class="nav-link" routerLink="/mis-datos">Mis Datos <span class="sr-only">(current)</span></a>
+      </li>
       <!-- <li class="nav-item">
         <a class="nav-link" routerLink="/prueba">Prueba</a>
       </li> -->
@@ -41,6 +41,9 @@
           <a class="dropdown-item nav-item " routerLink="venta-info">Mis ventas</a>
           <a class="dropdown-item nav-item " routerLink="venta">Realizar venta</a>
         </div>
+      </li>
+      <li *ngIf="isAdmin=='admin'" class="nav-item">
+        <a class="nav-link" routerLink="estadisticas">Estadisticas</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" routerLink="/" (click)="onLogout()">Salir</a>

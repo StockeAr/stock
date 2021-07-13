@@ -1,0 +1,156 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item" role="presentation">
+        <a class="nav-link active" id="perfil-tab" data-toggle="tab" href="#perfil" role="tab" aria-controls="perfil"
+            aria-selected="true">Mis datos</a>
+    </li>
+    <li class="nav-item" role="presentation">
+        <a class="nav-link" id="negocio-tab" data-toggle="tab" href="#negocio" role="tab" aria-controls="negocio"
+            aria-selected="false">Mi negocio</a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="perfil" role="tabpanel" aria-labelledby="perfil-tab">
+        <div class="card box col-8 mx-auto">
+            <div class="row no-gutters">
+                <div class="col-md-4">
+                    <img *ngIf="usuario.perfil" src={{usuario?.perfil}} class="img-fluid mx-auto" alt="error">
+                    <img *ngIf="!usuario.perfil" src='assets/chems.jpg' class="img-fluid mx-auto" alt="error">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Mis Datos</h5>
+                        <p class="card-text"><strong>Email:</strong> {{usuario.email}}</p>
+                        <p class="card-text"><strong>Nombre:</strong> {{usuario.nombre|titlecase}}</p>
+                        <p class="card-text"><strong>Apellido:</strong> {{usuario.apellido|titlecase}}</p>
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="card-footer">
+                        <button type="button" class="btn btn-block btn-outline-warning" (click)="abrir(content)">Editar
+                            Perfil</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade" id="negocio" role="tabpanel" aria-labelledby="negocio-tab">
+        <div *ngIf="negocio==null" class="col-12 box">
+            <br>
+            <button type="button" class="btn btn-outline-primary" (click)="open(infoNegocio,false)">Crear Mi
+                Negocio</button>
+            <br>
+            <br>
+        </div>
+        <div *ngIf="negocio!=null" class="col-8 box mx-auto">
+            <img src={{negocio.imagen}} alt="error" class="card-img-top">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="card-tittle"><strong>Nmbre de Comercio:</strong> {{negocio.nombre}}</h3>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Descripcion :</strong> {{negocio.descripcion}}</li>
+                        <li class="list-group-item"><strong>Direccion:</strong> {{negocio.direccion}}</li>
+                        <li class="list-group-item"><strong>Telefono:</strong> {{negocio.telefono}}</li>
+                        <li class="list-group-item"><strong>Correo:</strong> {{negocio.correo || 'no proporcionado'}}
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-outline-warning"
+                        (click)="edit=true && open(infoNegocio,true)">Editar</button>
+                </div>
+            </div>
+        </div>
+        <br>
+    </div>
+</div>
+
+<ng-template #infoNegocio let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Cargar Datos de Negocio</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form [formGroup]="negocioForm">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nombre: </label>
+                <input type="text" formControlName="name" class="form-control">
+                <div class="invalid" *ngIf="checkField('name')">
+                    <small>{{fieldMessage('name')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Direccion: </label>
+                <input type="text" formControlName="direccion" class="form-control">
+                <div class="invalid" *ngIf="checkField('direccion')">
+                    <small>{{fieldMessage('direccion')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Link de Imagen: </label>
+                <input type="text" formControlName="img" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Descripcion: </label>
+                <input type="text" formControlName="descripcion" class="form-control">
+            </div>
+            <div class="form-group">
+                <label>Telefono</label>
+                <input type="number" formControlName="telefono" class="form-control">
+                <div class="invalid" *ngIf="checkField('telefono')">
+                    <small>{{fieldMessage('telefono')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Correo de Contacto: </label>
+                <input type="email" formControlName="correo" class="form-control">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="!edit" type="button" class="btn btn-outline-success" [disabled]="negocioForm.invalid" (click)="onEdit()">Editar</button>
+            <button *ngIf="edit" type="button" class="btn btn-outline-success" [disabled]="negocioForm.invalid" (click)="onSave()">Crear</button>
+        </div>
+    </form>
+</ng-template>
+
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Editar mi Perfil</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form [formGroup]="adminForm" (ngSubmit)="editarPerfil()">
+        <div class="modal-body">
+            <div class="form-group">
+                <label>Nombre: </label>
+                <input type="text" class="form-control" formControlName="nombre">
+                <div class="invalid" *ngIf="checkField('nombre')">
+                    <small>{{fieldMessage('nombre')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Apellido: </label>
+                <input type="text" class="form-control" formControlName="apellido">
+                <div class="invalid" *ngIf="checkField('apellido')">
+                    <small>{{fieldMessage('apellido')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Correo: </label>
+                <input type="email" class="form-control" formControlName="username">
+                <div class="invalid" *ngIf="checkField('username')">
+                    <small>{{fieldMessage('username')}}</small>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Link de Imagen de Perfil</label>
+                <input type="text" class="form-control" formControlName="imagen">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-outline-success" [disabled]="this.adminForm.invalid">Aceptar</button>
+        </div>
+    </form>
+</ng-template>

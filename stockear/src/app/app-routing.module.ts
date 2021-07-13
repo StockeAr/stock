@@ -14,6 +14,8 @@ import { ProductosComponent } from './components/productos/productos.component';
 import { CategoriaComponent } from './components/categoria/categoria.component';
 import { MedidaComponent } from './components/medida/medida.component';
 import { VentaEmpleadosComponent } from './components/venta-empleados/venta-empleados.component';
+import { EstadisticasComponent } from './components/estadisticas/estadisticas.component';
+import { MiPerfilComponent } from './components/mi-perfil/mi-perfil.component';
 
 
 const routes: Routes = [
@@ -29,6 +31,8 @@ const routes: Routes = [
   { path: 'categoria', component: CategoriaComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'medida', component: MedidaComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: 'venta-empleados', component: VentaEmpleadosComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'estadisticas', component: EstadisticasComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'mis-datos', component: MiPerfilComponent, canActivate: [AuthGuard, AdminGuard] },
   { path: '**', redirectTo: 'home' }
 ];
 

@@ -14,7 +14,7 @@ export class NavbarComponent implements OnInit {
   isAdmin = null;
   isLogged = null;
   userD=[];
-  @Output() toggleSidenav = new EventEmitter<void>();
+  //@Output() toggleSidenav = new EventEmitter<void>();
 
   //private subscription: Subscription = new Subscription();
   private destroy$ = new Subject<any>();
@@ -48,9 +48,9 @@ export class NavbarComponent implements OnInit {
     this.destroy$.complete();
   }
   //esto es para cuando se implemente una barra de menu en el lateral
-  async sidenav() {
+  /* async sidenav() {
     this.toggleSidenav.emit();
-  }
+  } */
 
   onLogout() {
     this.auth.logout();

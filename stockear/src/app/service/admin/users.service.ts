@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { User,UserData } from 'src/app/models/user.interface';
+import { User, UserData } from 'src/app/models/user.interface';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 
@@ -30,7 +30,7 @@ export class UsersService {
   }
   new(user: User): Observable<any> {
     return this.http
-      .post<any>(`${environment.API_URL}/users`,user)
+      .post<any>(`${environment.API_URL}/users`, user)
       .pipe(catchError(this.handlerError));
   }
   update(userId: number, user: User): Observable<any> {
@@ -47,15 +47,15 @@ export class UsersService {
   handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
     if (err) {
-      errorMessage=`Error: 
+      errorMessage = `Error: 
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
     console.log(errorMessage);
     Swal.fire({
-      icon:'error',
-      title:'Opps...',
-      text:err.error.message
+      icon: 'error',
+      title: 'Opps...',
+      text: err.error.message
     });
     return throwError(errorMessage);
   }

@@ -45,11 +45,13 @@ export class VentaComponent implements OnInit {
   }
 
   onSubmit() {
+    if(this.ventaF.invalid){
+      console.log("no valido")
+      return;
+    }
     this.ventaInfo.push(this.ventaF.value.prod);
-
     this.myArray.cantidad.push(this.ventaF.value.cant);
     this.myArray.idProd.push(this.ventaF.value.prod.id);
-
     this.total = this.total + ((this.ventaF.value.prod.costo) * (this.ventaF.value.cant));
   }
 

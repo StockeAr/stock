@@ -1,62 +1,69 @@
-<br>
-<div class="col-12">
-  <div class="col-sm-6 float-left card" id="a">
-    <div class="card-header">
-      <h4>Productos</h4>
-    </div>
-    <div class="card-body">
-      <form [formGroup]="ventaF" (ngSubmit)="onSubmit()">
-        <div class="form-group">
-          <input type="text" placeholder="Buscar Producto" class="form-control" [(ngModel)]="filterProd" [ngModelOptions]="{standalone: true}">
-          <select formControlName="prod" class="custom-select">
-            <option [ngValue]="null" selected>Seleccionar ...</option>
-            <option *ngFor="let p of prod | filter:filterProd:'descrip'" [ngValue]="p" >{{p.descripcion}} c/u ${{p.costo}}</option>
-          </select>
+<div class="row">
+  <div class="col-12 col-sm-12 col-md-12 col-lg-5 col-xl-5" id="a" style="margin-bottom: 10px;">
+    <form [formGroup]="ventaF" (ngSubmit)="onSubmit()">
+      <div class="card">
+        <div class="card-header">
+          <h4>Productos</h4>
         </div>
-        <div class="form-group">
-          <div class="row">
-            <div class="col-6">
-              <input type="number" class="form-control" placeholder="cantidad" formControlName="cant">
-            </div>
-            <div class="col-6">
-              <button class="btn btn-primary" type="submit">Agregar</button>
+        <div class="card-body">
+          <div class="form-group">
+            <input type="text" placeholder="Buscar Producto" class="form-control" [(ngModel)]="filterProd"
+              [ngModelOptions]="{standalone: true}" style="margin-bottom: 5px;">
+            <select formControlName="prod" class="custom-select">
+              <option [ngValue]="null" disabled selected>Seleccionar ...</option>
+              <option *ngFor="let p of prod | filter:filterProd:'descrip'" [ngValue]="p">{{p.descripcion}}/ ${{p.costo}}/ disponible: {{p.cantidad}} {{p.medida?.descripcion || 'u'}}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <div class="row">
+              <div class="col-6">
+                <input type="number" class="form-control" placeholder="cantidad" formControlName="cant">
+              </div>
+              <div class="col-6">
+                <button class="btn btn-primary btn-block" type="submit">Agregar</button>
+              </div>
             </div>
           </div>
         </div>
-      </form>
+      </div>
+    </form>
+  </div>
+  <div class="col-12 col-sm-12 col-md-12 col-lg-7 col-xl-7" id="b">
+    <div class="card">
+      <div class="card-header">
+        <h4>Carrito 🛒</h4>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Producto</th>
+                <th scope="col">Cantidad</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Sub total</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody *ngFor="let item of ventaInfo;index as i">
+              <tr>
+                <th scope="row">{{item.descripcion}}</th>
+                <td>{{myArray.cantidad[i]}}</td>
+                <td>${{item.costo}}</td>
+                <td>${{(item.costo)*(myArray.cantidad[i])}}</td>
+                <td><button class="btn btn-sm btn-danger"
+                    (click)="eliminar(i,item.costo,myArray.cantidad[i])">eliminar</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card-footer">
+        <h4 class="float-right">Total: ${{total}}</h4>
+        <button class="btn btn-outline-success btn-block " (click)="confirmar()">Confirmar</button>
+      </div>
     </div>
   </div>
-  <div class="col-sm-6 float-right card" id="b">
-    <div class="card-header">
-      <h4>Carrito 🛒</h4>
-    </div>
-    <div class="card-body">
-      <table class="table table-bordered table-responsive">
-        <thead class="thead-dark">
-          <tr>
-            <th scope="col">Producto</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Precio</th>
-            <th scope="col">Sub total</th>
-            <th scope="col">Acciones</th>
-          </tr>
-        </thead>
-        <tbody *ngFor="let item of ventaInfo;index as i">
-          <tr>
-            <th scope="row">{{item.descripcion}}</th>
-            <td>{{myArray.cantidad[i]}}</td>
-            <td>${{item.costo}}</td>
-            <td>${{(item.costo)*(myArray.cantidad[i])}}</td>
-            <td><button class="btn btn-sm btn-danger"
-                (click)="eliminar(i,item.costo,myArray.cantidad[i])">eliminar</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="card-footer">
-      <h4 class="float-right">Total: ${{total}}</h4>
-    </div>
-    <button class="btn btn-outline-success btn-block " (click)="confirmar()">Confirmar</button>
-    <br>
-  </div>
+
+
 </div>
