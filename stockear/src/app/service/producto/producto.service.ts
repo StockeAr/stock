@@ -15,25 +15,31 @@ export class ProductoService {
 
   getAll(): Observable<Producto[]> {
     return this.http
-      .get<Producto[]>(`${environment.API_URL}/producto`)
+      .get<Producto[]>(`${environment.API_URL}/producto/list`)
       .pipe(
-        catchError((err) => this.handlerError(err)
-        )
+        catchError((err) => this.handlerError(err))
+      );
+  }
+
+  getActive(): Observable<Producto[]> {
+    return this.http
+      .get<Producto[]>(`${environment.API_URL}/producto/list-active`)
+      .pipe(
+        catchError((err) => this.handlerError(err))
       );
   }
 
   new(producto: any): Observable<any> {
     return this.http
-      .post<any>(`${environment.API_URL}/producto`, producto)
+      .post<any>(`${environment.API_URL}/producto/new`, producto)
       .pipe(
-        catchError((err) => this.handlerError(err)
-        )
+        catchError((err) => this.handlerError(err))
       );
   }
 
   edit(producto: any, id: any): Observable<any> {
     return this.http
-      .patch<any>(`${environment.API_URL}/producto/${id}`, producto)
+      .patch<any>(`${environment.API_URL}/producto/edit/${id}`, producto)
       .pipe(
         catchError((err) => this.handlerError(err))
       );
@@ -41,7 +47,7 @@ export class ProductoService {
 
   delete(id: any): Observable<any | void> {
     return this.http
-      .delete(`${environment.API_URL}/producto/${id}`)
+      .delete(`${environment.API_URL}/producto/delete/${id}`)
       .pipe(
         catchError((err) => this.handlerError(err))
       );
@@ -49,18 +55,20 @@ export class ProductoService {
 
   private handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
-    console.log(err.error.errors);
     if (err) {
       errorMessage = `Error: 
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     Swal.fire({
       icon: 'error',
       title: 'Opps...',
       text: err.error.message
     });
+    if (err.error.errors) {
+      console.log("errores: ", err.error?.errors);
+    }
     return throwError(errorMessage);
   }
 }

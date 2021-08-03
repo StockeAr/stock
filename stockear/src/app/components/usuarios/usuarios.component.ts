@@ -1,15 +1,13 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { UserData } from 'src/app/models/user.interface';
 import { UsersService } from 'src/app/service/admin/users.service';
 import { AuthService } from 'src/app/service/auth/auth.service';
-import { BaseFormUser } from 'src/app/utils/base-form-user';
+import { BaseErrorMessage } from 'src/app/utils/base-field-error';
 import Swal from 'sweetalert2';
-import { UserResponse } from '../../models/user.interface';
 
 enum Action {
   EDIT = 'edit',
@@ -33,6 +31,8 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   actionToDo = Action.NEW;//con esto defino la accion a realizar, es un texto en cuestion
 
   private destroy$ = new Subject<any>();
+  private subscription: Subscription = new Subscription();
+
   //adminId: any;
 
   //aux: any;
@@ -40,74 +40,104 @@ export class UsuariosComponent implements OnInit, OnDestroy {
   private isValidEmail = /(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
   private isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])([A-Za-z\d$@!%*?&]|[^ ]){8,15}$/;
 
-  constructor(private userSVC: UsersService, private modalService: NgbModal, public formBuilder: FormBuilder, public userF: BaseFormUser, private router: Router, public auth: AuthService) {
+  constructor(
+    private userSVC: UsersService,
+    private modalService: NgbModal,
+    public formBuilder: FormBuilder,
+    public baseError: BaseErrorMessage,
+    public auth: AuthService) {
   }
 
   ngOnInit(): void {
-    //this.userSVC.getAll().subscribe((res) => console.log('User: ', res));
-
-    this.userSVC.getAll().subscribe((res) => this.variable = res);
+    this.subscription.add(
+      this.userSVC.getAll().subscribe((res) => this.variable = res)
+    );
     this.userForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.pattern(this.isValidEmail)]],
-      rol: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.pattern(this.isValidPassword)]],
       nombre: ['', [Validators.required]],
-      apellido: ['', [Validators.required]]
+      apellido: ['', [Validators.required]],
+      activo: [true, [Validators.required]]
     });
-
-    /* this.auth.user$.subscribe((user: UserResponse) => {
-      this.adminId = user?.userId;
-    }) */
+    this.baseError.base = this.userForm;
   }
 
   guardar() {
+    if (this.userForm.invalid) {
+      return;
+    }
     const formValue = this.userForm.value;
     if (this.actionToDo == Action.NEW) {
-      this.userSVC.new(formValue).subscribe((res) => {
-        if (res) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Ok',
-            text: res.message
-          });
-          this.modalService.dismissAll();
-          this.ngOnInit();
-        }
-      });
-    } else {
-      this.userSVC.update(this.idUser, formValue).subscribe((res) => {
-        if (res) {
-          Swal.fire({
-            icon: 'success',
-            title: 'Ok',
-            text: res.message
-          });
-          this.modalService.dismissAll();
-          this.ngOnInit();
-        }
-      });
-    }
-  }
-
-  checkField(field: string): boolean {
-    return this.userF.isValidField(field);
-  }
-
-  eliminar(id: number) {
-    if (window.confirm('¿Desea Usted eliminar el usuario seleccionado?')) {
-      this.userSVC.delete(id)
-        .pipe(takeUntil(this.destroy$))
-        .subscribe((res) => {
+      this.subscription.add(
+        this.userSVC.new(formValue).subscribe((res) => {
           if (res) {
             Swal.fire({
               icon: 'success',
               title: 'Ok',
               text: res.message
             });
+            this.modalService.dismissAll();
             this.ngOnInit();
           }
-        });
+        })
+      );
+    } else {
+      this.subscription.add(
+        this.userSVC.update(this.idUser, formValue).subscribe((res) => {
+          if (res) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Ok',
+              text: res.message
+            });
+            this.modalService.dismissAll();
+            this.ngOnInit();
+          }
+        })
+      );
     }
+  }
+
+  eliminar(id: number) {
+
+    Swal.fire({
+      title: '¿Desea eliminar el usuario seleccionado?',
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Aceptar',
+      denyButtonText: 'Atras'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.subscription.add(
+          this.userSVC.delete(id)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res) => {
+              Swal.fire({
+                icon: 'success',
+                title: 'Ok',
+                text: res.message
+              });
+              this.ngOnInit();
+            })
+        );
+      }
+    })
+    /* if (window.confirm('¿Desea Usted eliminar el usuario seleccionado?')) {
+      this.subscription.add(
+        this.userSVC.delete(id)
+          .pipe(takeUntil(this.destroy$))
+          .subscribe((res) => {
+            if (res) {
+              Swal.fire({
+                icon: 'success',
+                title: 'Ok',
+                text: res.message
+              });
+              this.ngOnInit();
+            }
+          })
+      );
+    } */
   }
 
   //esto es para abrir el cuadro de dialogo
@@ -116,10 +146,10 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.actionToDo = Action.NEW;
       this.userForm.setValue({
         username: '',
-        rol: '',
         password: '',
         nombre: '',
-        apellido: ''
+        apellido: '',
+        activo: true,
       });
       this.idUser = null;
       this.flag = false;
@@ -127,58 +157,32 @@ export class UsuariosComponent implements OnInit, OnDestroy {
       this.actionToDo = Action.EDIT;
       this.userForm.setValue({
         username: user?.username,
-        rol: user?.rol,
-        password: '',
+        password: '@Simil123',
         nombre: user?.nombre,
-        apellido: user?.apellido
+        apellido: user?.apellido,
+        activo: user?.activo
       });
       this.idUser = user?.id;
       this.flag = true;
     }
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
-  }
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   ngOnDestroy(): void {
     this.destroy$.next({});
     this.destroy$.complete();
     this.modalService.dismissAll();
+    this.subscription.unsubscribe();
+    console.clear();
   }
 
-  getErrorMessage(field: string): string {
-    let message;
-    if (this.userForm.get(field).errors.required) {
-      message = 'Ingrese un valor';
-    } else {
-      if (this.userForm.get(field).hasError('pattern')) {
-        message = "Ingrese un valor Valido";
-      } else {
-        if (this.userForm.get(field).hasError('minlength')) {
-          const min = this.userForm.get(field).errors?.minlength.requiredLength;
-          message = `Este campo requiere un minimo de ${min} caracteres`;
-        }
-      }
-    }
-    return message;
+  checkField(field: string): boolean {
+    return this.baseError.isValidField(field);
   }
 
-  isValidField(field: string): boolean {
-    return (
-      (this.userForm.get(field).touched || this.userForm.get(field).dirty) &&
-      !this.userForm.get(field).valid
-    );
+  fieldMessage(field: string): string {
+    return this.baseError.getErrorMessage(field);
   }
+
 
 }

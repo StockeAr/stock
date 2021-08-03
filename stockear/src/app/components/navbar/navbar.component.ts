@@ -4,6 +4,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { takeUntil } from 'rxjs/operators';
 import { UserResponse } from 'src/app/models/user.interface';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-navbar',
@@ -12,33 +13,28 @@ import { UserResponse } from 'src/app/models/user.interface';
 })
 export class NavbarComponent implements OnInit {
   isAdmin = null;
-  isLogged = null;
-  userD=[];
+  negocio = null;
   //@Output() toggleSidenav = new EventEmitter<void>();
 
   //private subscription: Subscription = new Subscription();
   private destroy$ = new Subject<any>();
 
-  constructor( private router: Router, public auth: AuthService) { }
+  constructor(private router: Router, public auth: AuthService, private titleService: Title) { }
 
   ngOnInit() {
     /* this.subscription.add(
       this.auth.isLogged.subscribe((res) => (this.isLogged = res))
     ); */
     //la de abajo es la ultima que se uso
-    /*  this.auth.isLogged.pipe(takeUntil(this.destroy$))
-       .subscribe((res) => (this.isLogged = res));
- 
-     this.auth.isAdmin.pipe(takeUntil(this.destroy$))
-       .subscribe(res => this.isAdmin = res); */
+    //this.auth.isLogged.pipe(takeUntil(this.destroy$)).subscribe((res) => (this.isLogged = res));
+    //this.auth.isAdmin.pipe(takeUntil(this.destroy$)).subscribe(res => this.isAdmin = res);
 
     this.auth.user$
       .pipe(takeUntil(this.destroy$))
-      .subscribe((user:UserResponse) => {
-        this.isLogged = true;
+      .subscribe((user: UserResponse) => {
         this.isAdmin = user?.role;
-        this.userD[0]=user?.nombre;
-        this.userD[1]=user?.apellido;
+        this.negocio = user?.negocio;
+        this.titleService.setTitle(user?.negocio || 'Stockear');
       });
   }
 
@@ -46,6 +42,7 @@ export class NavbarComponent implements OnInit {
     //this.subscription.unsubscribe();
     this.destroy$.next({});
     this.destroy$.complete();
+    console.clear();
   }
   //esto es para cuando se implemente una barra de menu en el lateral
   /* async sidenav() {
@@ -55,7 +52,6 @@ export class NavbarComponent implements OnInit {
   onLogout() {
     this.auth.logout();
     this.router.navigate(['/']);
-    /* this.isAdmin=null;
-    this.isLogged=null; */
+    this.isAdmin = null;
   }
 }

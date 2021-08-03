@@ -17,6 +17,7 @@ export interface Producto {
     categoria?: Categoria;
     imagen?: string;
     medida?: Medida;
+    activo: boolean;
 }
 
 export interface Negocio {

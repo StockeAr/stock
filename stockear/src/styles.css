@@ -12404,3 +12404,7 @@ body{
 table{
   background-color: rgb(195, 204, 231);
 }
+
+.required-field{
+  color: red;
+}

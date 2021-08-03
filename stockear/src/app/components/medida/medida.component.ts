@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
 import { Medida } from 'src/app/models/varios.interface';
 import { MedidaService } from 'src/app/service/medida/medida.service';
+import { BaseErrorMessage } from 'src/app/utils/base-field-error';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -14,35 +14,41 @@ import Swal from 'sweetalert2';
 })
 export class MedidaComponent implements OnInit, OnDestroy {
 
-  medidas: Medida[] = [];
+  medidas: Medida[] = null;
 
   medidaForm: FormGroup;
   edit: boolean = false;
   idMedida: number;
   private destroy$ = new Subject<any>();
-
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private medidaSVC: MedidaService,
     private formB: FormBuilder,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private baseError: BaseErrorMessage,
   ) { }
   ngOnDestroy(): void {
     this.destroy$.next({});
     this.destroy$.complete();
+    this.subscription.unsubscribe();
+    this.modalService.dismissAll();
+    console.clear();
   }
 
   ngOnInit(): void {
-    this.modalService.dismissAll();
-    this.medidaSVC.getAll().subscribe(
+    //this.modalService.dismissAll();
+    this.subscription.add(this.medidaSVC.getAll().subscribe(
       (res) => {
         this.medidas = res;
       }
-    );
+    ));
     this.medidaForm = this.formB.group({
       descripcion: ['', [Validators.required, Validators.minLength(1), Validators.maxLength(30)]]
     });
+    this.baseError.base = this.medidaForm;
   }
+
 
   open(content: any, medida: any) {
     if (medida != null) {
@@ -58,7 +64,7 @@ export class MedidaComponent implements OnInit, OnDestroy {
       this.edit = false;
       this.idMedida = null;
     }
-    this.modalService.open(content);
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   onSubmit() {
@@ -67,7 +73,7 @@ export class MedidaComponent implements OnInit, OnDestroy {
     }
     const formValue = this.medidaForm.value;
     if (this.edit == true) {
-      this.medidaSVC.edit(this.idMedida, formValue).subscribe(
+      this.subscription.add(this.medidaSVC.edit(this.idMedida, formValue).subscribe(
         (res) => {
           Swal.fire({
             icon: 'success',
@@ -75,10 +81,11 @@ export class MedidaComponent implements OnInit, OnDestroy {
             text: res.message
           });
           this.ngOnInit();
+          this.modalService.dismissAll();
         }
-      );
+      ));
     } else {
-      this.medidaSVC.new(formValue).subscribe(
+      this.subscription.add(this.medidaSVC.new(formValue).subscribe(
         (res) => {
           Swal.fire({
             icon: 'success',
@@ -86,8 +93,9 @@ export class MedidaComponent implements OnInit, OnDestroy {
             text: res.message
           });
           this.ngOnInit();
+          this.modalService.dismissAll();
         }
-      )
+      ));
     }
   }
 
@@ -100,19 +108,31 @@ export class MedidaComponent implements OnInit, OnDestroy {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Si!',
+      //lo de abajo funciona de igual manera que capturando el resultado del cuadro de dialogo
+      /* preConfirm: () => {
+        this.medidaSVC.delete(id).subscribe(
+          (res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Ok',
+              text: res.message
+            });
+            this.ngOnInit();
+          }
+        );
+      } */
     }).then((result) => {
       if (result.isConfirmed) {
-        this.medidaSVC.delete(id)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe(
-            (res) => {
-              if (res) {
-                this.ngOnInit();
-                Swal.fire('Ok', res.message, 'success');
-              }
-              this.ngOnInit();
-            }
-          );
+        this.subscription.add(this.medidaSVC.delete(id).subscribe(
+          (res) => {
+            Swal.fire({
+              icon: 'success',
+              title: 'Ok',
+              text: res.message
+            });
+            this.ngOnInit();
+          }
+        ));
       }
     });
     /* if (window.confirm("¿Esta seguro?")) {
@@ -131,31 +151,12 @@ export class MedidaComponent implements OnInit, OnDestroy {
     } */
   }
 
-  isValidField(field: string): boolean {
-    return (
-      (this.medidaForm.get(field).touched || this.medidaForm.get(field).dirty) &&
-      !this.medidaForm.get(field).valid
-    );
+  checkField(field: string): boolean {
+    return this.baseError.isValidField(field);
   }
 
-  getErrorMessage(field: string): string {
-    let message;
-    if (this.medidaForm.get(field).errors.required) {
-      message = 'Ingrese un valor';
-    }
-    else {
-      if (this.medidaForm.get(field).hasError('minlength')) {
-        const min = this.medidaForm.get(field).errors?.minlength.requiredLength;
-        message = `Este campo requiere un minimo de ${min} caracteres`;
-      }
-      else {
-        if (this.medidaForm.get(field).hasError('maxLenght')) {
-          const max = this.medidaForm.get(field).errors?.maxlength.requiredLength;
-          message = `Este campo requiere un minimo de ${max} caracteres`;
-        }
-      }
-    }
-    return message;
+  fieldMessage(field: string): string {
+    return this.baseError.getErrorMessage(field);
   }
 
 }

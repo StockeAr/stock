@@ -1,4 +1,3 @@
-<br>
 <h2>Listado de Empleados</h2>
 <div class="table">
     <button type="button" class="btn btn-outline-success" (click)="open(content,null)">Agregar un nuevo Usuario</button>
@@ -13,11 +12,13 @@
     <table class="table table-bordered table-hover">
         <thead class="thead-dark">
             <tr>
-                <th scope="col" [appSort]="variable" data-order="desc" data-name="id">id</th>
-                <th scope="col" [appSort]="variable" data-order="desc" data-name="username">username</th>
-                <th scope="col" [appSort]="variable" data-order="desc" data-name="nombre">nombre</th>
-                <th scope="col" [appSort]="variable" data-order="desc" data-name="apellido">apellido</th>
-                <th scope="col" [appSort]="variable" data-order="desc" data-name="rol">rol</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="id">ID</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="username">CORREO</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="nombre">NOMBRE</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="apellido">APELLIDO</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="rol">ROL</th>
+                <th scope="col" [appSort]="variable" data-order="desc" data-name="modificado">FECHA MODIFICACION</th>
+                <th scope="col">¿Activo?</th>
                 <th scope="colgroup">Accciones</th>
             </tr>
         </thead>
@@ -28,6 +29,8 @@
                 <td>{{item.nombre}}</td>
                 <td>{{item.apellido}}</td>
                 <td>{{item.rol}}</td>
+                <td>{{item.modificado | date : 'dd/MM/yy HH:mm:ss'}}</td>
+                <td>{{item.activo}}</td>
                 <td>
                     <div class="btn-group" role="group">
                         <button type="button" class="btn btn-warning btn-sm"
@@ -55,46 +58,49 @@
         <form [formGroup]='userForm'>
             <fieldset>
                 <div class="form-group">
-                    <label>Username </label>
+                    <label>Correo<span class="required-field">*</span>: </label>
                     <input type="text" formControlName="username" class="form-control">
-                    <div class="invalid" *ngIf="isValidField('username')">
-                        {{getErrorMessage("username")}}
+                    <div class="invalid" *ngIf="checkField('username')">
+                        <small>{{fieldMessage('username')}}</small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Nombre </label>
+                    <label>Nombre<span class="required-field">*</span>: </label>
                     <input type="text" formControlName="nombre" class="form-control">
-                    <div class="invalid" *ngIf="isValidField('nombre')">
-                        {{getErrorMessage("nombre")}}
+                    <div class="invalid" *ngIf="checkField('nombre')">
+                        <small>{{fieldMessage('nombre')}}</small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Apellido </label>
+                    <label>Apellido<span class="required-field">*</span>: </label>
                     <input type="text" formControlName="apellido" class="form-control">
-                    <div class="invalid" *ngIf="isValidField('apellido')">
-                        {{getErrorMessage("apellido")}}
+                    <div class="invalid" *ngIf="checkField('apellido')">
+                        <small>{{fieldMessage('apellido')}}</small>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>Rol </label>
-                    <input type="text" formControlName="rol" class="form-control">
-                    <span *ngIf="checkField('rol')">{{userF.errorMessage}}</span>
-                </div>
-                <div class="form-group" *ngIf="actionToDo === 'new'">
-                    <label>Password </label>
+                    <label>Password<span class="required-field">*</span>: </label>
                     <input type="password" formControlName="password" class="form-control">
-                    <div class="invalid" *ngIf="isValidField('password')">
-                        {{getErrorMessage("password")}}
+                    <div class="invalid" *ngIf="checkField('password')">
+                        <small>{{fieldMessage('password')}}</small>
                     </div>
                 </div>
+                <div class="form-group">
+                    <label>¿Activo?:</label>
+                    <select class="custom-select" formControlName="activo">
+                      <option value="{{true}}" selected>Si</option>
+                      <option value="{{false}}">NO</option>
+                    </select>
+                  </div>
             </fieldset>
         </form>
+        <p class="card-text" style="font-size: small;"><span class="required-field">*</span> <span>Campo
+                obligatorio</span></p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+        <button [disabled]="userForm.invalid" type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
             *ngIf="!flag">Agregar</button>
-        <button type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
+        <button [disabled]="userForm.invalid" type="button" class="btn btn-primary btn-lg btn-block" (click)="guardar()"
             *ngIf="flag">Actualizar</button>
     </div>
-    {{userF.baseForm.status}} status
 </ng-template>

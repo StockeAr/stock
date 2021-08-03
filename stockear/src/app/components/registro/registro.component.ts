@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
+import { BaseErrorMessage } from 'src/app/utils/base-field-error';
 import Swal from 'sweetalert2';
 
 
@@ -11,8 +13,7 @@ import Swal from 'sweetalert2';
   styleUrls: ['./registro.component.css'],
   //providers:[UsuarioService],
 })
-export class RegistroComponent implements OnInit {
-
+export class RegistroComponent implements OnInit, OnDestroy {
 
   private isValidEmail = /(^\w{2,15}\.?\w{1,15})\@(\w{2,15}\.[a-zA-Z]{2,10})$/;
   private isValidPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])([A-Za-z\d$@!%*?&]|[^ ]){8,15}$/;
@@ -25,53 +26,51 @@ export class RegistroComponent implements OnInit {
     confirmPassword: ['', [Validators.required]]
   });
 
+  private subscription: Subscription = new Subscription();
+
   boton: boolean;
 
-  constructor(private router: Router, private fb: FormBuilder, private auth: AuthService) { }
+  constructor(
+    private router: Router,
+    private fb: FormBuilder,
+    private auth: AuthService,
+    private baseError: BaseErrorMessage
+  ) { }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    console.clear();
+  }
 
   ngOnInit(): void {
     this.boton = false;
+    this.baseError.base = this.registerForm;
   }
   onRegister() {
     if (this.registerForm.invalid) {
       return;
     }
-    this.auth.register(this.registerForm.value).subscribe(res => {
-      if (res) {
-        //window.alert(res.message);
-        Swal.fire({
-          title: 'Success',
-          text: res.message,
-          icon: 'success'
-        })
-        this.registerForm.reset();
-        this.router.navigate(['login']);
-      }
-    });
-  }
-
-  getErrorMessage(field: string): string {
-    let message;
-    if (this.registerForm.get(field).errors.required) {
-      message = 'Ingrese un valor';
-    } else {
-      if (this.registerForm.get(field).hasError('pattern')) {
-        message = "Ingrese un valor Valido";
-      } else {
-        if (this.registerForm.get(field).hasError('minlength')) {
-          const min = this.registerForm.get(field).errors?.minlength.requiredLength;
-          message = `Este campo requiere un minimo de ${min} caracteres`;
+    this.subscription.add(
+      this.auth.register(this.registerForm.value).subscribe(res => {
+        if (res) {
+          //window.alert(res.message);
+          Swal.fire({
+            title: 'Success',
+            text: res.message,
+            icon: 'success'
+          })
+          this.registerForm.reset();
+          this.router.navigate(['login']);
         }
-      }
-    }
-    return message;
+      })
+    );
   }
 
-  isValidField(field: string): boolean {
-    return (
-      (this.registerForm.get(field).touched || this.registerForm.get(field).dirty) &&
-      !this.registerForm.get(field).valid
-    );
+  checkField(field: string): boolean {
+    return this.baseError.isValidField(field);
+  }
+
+  fieldMessage(field: string): string {
+    return this.baseError.getErrorMessage(field);
   }
 
 }

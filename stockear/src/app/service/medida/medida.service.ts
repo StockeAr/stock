@@ -59,7 +59,7 @@ export class MedidaService {
       title: 'Opps...',
       text: err.error.message
     });
-    if (err.error.erros) {
+    if (err.error.errors) {
       console.log("errores: ", err.error?.errors);
     }
     return throwError(errorMessage);

@@ -61,12 +61,15 @@ export class CategoriaService {
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     Swal.fire({
       icon: 'error',
       title: 'Opps...',
       text: err.error.message
     });
+    if (err.error.errors) {
+      console.log("errores: ", err.error?.errors);
+    }
     return throwError(errorMessage);
   }
 }

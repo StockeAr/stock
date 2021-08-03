@@ -81,14 +81,6 @@ export class AuthService {
       )
   }
 
-  /* mydata(id: any): Observable<any> {
-    return this.http
-      .get<any>(`${environment.API_URL}/auth/mi-perfil/${id}`)
-      .pipe(
-        catchError((err) => this.handleError(err))
-      )
-  } */
-
   editarPerfil(usuario: any): Observable<any> {
     return this.http
       .patch<any>(`${environment.API_URL}/auth/edit`, usuario)
@@ -143,6 +135,9 @@ export class AuthService {
       title: 'Opps...',
       text: err.error.message
     });
+    if (err.error.errors) {
+      console.log("errores: ", err.error?.errors);
+    }
     return throwError(errorMessage);
   }
 

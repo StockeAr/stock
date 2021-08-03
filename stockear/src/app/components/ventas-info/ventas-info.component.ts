@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 import { Venta, VentaDetalle } from 'src/app/models/venta.interface';
 import { VentaService } from 'src/app/service/venta/venta.service';
 
@@ -9,37 +9,34 @@ import { VentaService } from 'src/app/service/venta/venta.service';
   templateUrl: './ventas-info.component.html',
   styleUrls: ['./ventas-info.component.css']
 })
-export class VentasInfoComponent implements OnInit {
+export class VentasInfoComponent implements OnInit, OnDestroy {
 
   ventas: Venta[];
   closeResult = '';
-  ventaInfo:VentaDetalle[];
+  ventaInfo: VentaDetalle[];
+
+  private subscription: Subscription = new Subscription();
 
   constructor(private ventaSVC: VentaService, private modalService: NgbModal) { }
+  ngOnDestroy(): void {
+    this.modalService.dismissAll();
+    this.subscription.unsubscribe();
+    console.clear();
+  }
 
   ngOnInit(): void {
-    this.ventaSVC.getAll().subscribe((res) => this.ventas = res);
+    this.subscription.add(this.ventaSVC.getAll().subscribe((res) => this.ventas = res));
   }
 
   open(content, id: number) {
-    if(id){
-      this.ventaSVC.getById(id).subscribe((res) => this.ventaInfo=res);
+    this.ventaInfo = [];
+    if (id) {
+      this.subscription.add(this.ventaSVC.getById(id).subscribe(
+        (res) => {
+          this.ventaInfo = res
+        }
+      ));
     }
-    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then((result) => {
-    this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title', size: 'lg' });
   }
-
-  private getDismissReason(reason: any): string {
-    if (reason === ModalDismissReasons.ESC) {
-      return 'by pressing ESC';
-    } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
-    } else {
-      return `with: ${reason}`;
-    }
-  }
-
 }

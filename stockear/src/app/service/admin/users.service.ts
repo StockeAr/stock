@@ -20,43 +20,51 @@ export class UsersService {
 
     return this.http
       .get<UserData[]>(`${environment.API_URL}/users`)
-      .pipe(catchError(this.handlerError));
+      .pipe(catchError((err) => this.handlerError(err))
+      );
   }
 
   getById(userId: number): Observable<User> {
     return this.http
       .get<any>(`${environment.API_URL}/users/${userId}`)
-      .pipe(catchError(this.handlerError));
+      .pipe(catchError((err) => this.handlerError(err))
+      );
   }
   new(user: User): Observable<any> {
     return this.http
       .post<any>(`${environment.API_URL}/users`, user)
-      .pipe(catchError(this.handlerError));
+      .pipe(catchError((err) => this.handlerError(err))
+      );
   }
   update(userId: number, user: User): Observable<any> {
     return this.http
       .patch<any>(`${environment.API_URL}/users/${userId}`, user)
-      .pipe(catchError(this.handlerError));
+      .pipe(catchError((err) => this.handlerError(err))
+      );
   }
   delete(userId: number): Observable<any> {
     return this.http
       .delete<any>(`${environment.API_URL}/users/${userId}`)
-      .pipe(catchError(this.handlerError));
+      .pipe(catchError((err) => this.handlerError(err))
+      );
   }
 
-  handlerError(err): Observable<never> {
+  private handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
     if (err) {
       errorMessage = `Error: 
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     Swal.fire({
       icon: 'error',
       title: 'Opps...',
       text: err.error.message
     });
+    if (err.error.errors) {
+      console.log("errores: ", err.error?.errors);
+    }
     return throwError(errorMessage);
   }
 }

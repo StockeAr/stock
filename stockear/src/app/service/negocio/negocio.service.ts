@@ -21,7 +21,7 @@ export class NegocioService {
       );
   }
 
-  new(negocio: any): Observable<any | void> {
+  new(negocio: any): Observable<any> {
     return this.http
       .post(`${environment.API_URL}/negocio/new`, negocio)
       .pipe(
@@ -39,18 +39,20 @@ export class NegocioService {
 
   private handlerError(err): Observable<never> {
     let errorMessage = "Ha ocurrido un error al obtener los datos";
-    console.log(err?.error?.errors);
     if (err) {
       errorMessage = `Error: 
       code -> ${err.status}
       message -> ${err.error.message} `;
     }
-    console.log(errorMessage);
+    //console.log(errorMessage);
     Swal.fire({
       icon: 'error',
       title: 'Opps...',
       text: err.error.message
     });
+    if (err.error.errors) {
+      console.log("errores: ", err.error.errors);
+    };
     return throwError(errorMessage);
   }
 }

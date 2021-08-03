@@ -17,9 +17,12 @@ export interface UserResponse {
     apellido: string;
     perfil: string;
     email: string;
+    negocio?: string;
 }
 export interface UserData {
     username: string;
     id: number;
     rol: string;
+    modificado?: Date;
+    activo:boolean;
 }

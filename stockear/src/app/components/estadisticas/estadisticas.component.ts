@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { VentaService } from 'src/app/service/venta/venta.service';
 
 @Component({
@@ -6,9 +7,11 @@ import { VentaService } from 'src/app/service/venta/venta.service';
   templateUrl: './estadisticas.component.html',
   styleUrls: ['./estadisticas.component.css']
 })
-export class EstadisticasComponent implements OnInit {
+export class EstadisticasComponent implements OnInit, OnDestroy {
 
-  dato: [{ name: string, value: number }];
+  private subscription: Subscription = new Subscription();
+  users: [{ name: string, value: number }];
+  products: [{ name: string, value: number }];
 
   //ngscharts
   view: any[] = [700, 300];
@@ -21,23 +24,27 @@ export class EstadisticasComponent implements OnInit {
   ];
 
   // options
-  gradient: boolean = true;
+  gradient: boolean = false;
   showLegend: boolean = true;
   showLabels: boolean = true;
   isDoughnut: boolean = false;
   //end
 
   constructor(private ventaSVC: VentaService) { }
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    console.clear();
+  }
 
   ngOnInit(): void {
-    this.ventaSVC.estadisticas().subscribe(
+    this.subscription.add(this.ventaSVC.estadisticas().subscribe(
       (res) => {
         //let result: any = res;
-        console.log(res);
-        const { venta } = res;
-        this.dato = this.parseAndSaveData(venta);
+        const { user, prod } = res;
+        this.users = this.parseAndSaveData(user);
+        this.products = this.parseAndSaveData(prod);
       }
-    );
+    ));
   }
 
   //ngxcharts
@@ -57,9 +64,9 @@ export class EstadisticasComponent implements OnInit {
   private parseAndSaveData(res: any[]): [{ name: string, value: number }] {
     let result: [{ name: string, value: number }] = [{ name: "", value: 0 }];
     for (let i of res) {
-      let value=0;
-      if(i.value!=null){
-        value=parseInt(i.value);
+      let value = 0;
+      if (i.value != null) {
+        value = parseInt(i.value);
       }
       result.push({
         name: i.name,

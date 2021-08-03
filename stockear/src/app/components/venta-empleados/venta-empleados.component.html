@@ -47,7 +47,7 @@
                 <tr *ngFor="let d of detalle">
                     <th scope="row">{{d.ventaId}}</th>
                     <td>{{d.producto.descripcion}}</td>
-                    <td>$ {{d.producto.costo}}</td>
+                    <td>$ {{d.precio}}</td>
                     <td>{{d.cantidad}} {{d.producto?.medida?.descripcion || 'unidades'}}</td>
                     <td>$ {{d.totalParcial}}</td>
                     <td>{{d.producto?.categoria?.descripcion}}</td>
@@ -59,9 +59,3 @@
         <button type="button" class="btn btn-outline-success" (click)="modal.close('Save click')">Aceptar</button>
     </div>
 </ng-template>
-
-<div>
-    <ngx-charts-advanced-pie-chart [view]="view" scheme="cool" [results]="dibujar" [gradient]="gradient"
-        (select)="onSelect($event)" (activate)="onActivate($event)" (deactivate)="onDeactivate($event)">
-    </ngx-charts-advanced-pie-chart>
-</div>

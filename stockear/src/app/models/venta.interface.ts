@@ -6,9 +6,8 @@ export interface Venta {
 
 export interface VentaDetalle {
     ventaId: number;
-    producto: string;
-    categoria: string;
-    costo: number;
+    producto: any;
+    precio: number;
     cantidad: number;
     totalParcial: number;
 }

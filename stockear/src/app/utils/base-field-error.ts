@@ -27,11 +27,13 @@ export class BaseErrorMessage {
         if (errors) {
             const minlength = errors?.minlength?.requiredLength;
             const maxlength = errors?.maxlength?.requiredLength;
+            const min = errors?.min?.min;
             const messages: any = {
                 required: 'Campo obligatorio',
                 pattern: `No es un ${field} valido`,
                 minlength: `Campo de minimo ${minlength} caracteres`,
                 maxlength: `Campo de maximo ${maxlength} caracteres`,
+                min: `Campo con valor minimo  de ${min}`,
             };
 
             const errorKey = Object.keys(errors).find(Boolean);

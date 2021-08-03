@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Subscription } from 'rxjs';
 import { AuthService } from 'src/app/service/auth/auth.service';
 import { NegocioService } from 'src/app/service/negocio/negocio.service';
 import { BaseErrorMessage } from 'src/app/utils/base-field-error';
@@ -14,17 +15,20 @@ import Swal from 'sweetalert2';
 export class MiPerfilComponent implements OnInit, OnDestroy {
 
   negocio: any = null;
-  edit: boolean = false;
+  edit: boolean;
+  create: boolean;
   usuario: any;
   idUser: number = null;
+  private user: any = [];
   negocioForm = this.formB.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     direccion: ['', [Validators.required, Validators.minLength(5)]],
-    telefono: ['', [Validators.required, Validators.minLength(8)]],
+    //telefono: ['', [Validators.required, Validators.minLength(8)]],
+    telefono: [null],
     img: [null],
     userId: [null],
     descripcion: [null],
-    correo: ['']
+    correo: [null]
   });
 
   adminForm = this.formB.group({
@@ -33,6 +37,8 @@ export class MiPerfilComponent implements OnInit, OnDestroy {
     username: ['', [Validators.required, Validators.minLength(6)]],
     imagen: [null],
   });
+
+  private subscription: Subscription = new Subscription();
 
   constructor(
     private formB: FormBuilder,
@@ -45,13 +51,15 @@ export class MiPerfilComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.modalService.dismissAll();
     this.negocioForm.reset();
+    this.usuario = null;
+    this.subscription.unsubscribe();
+    console.clear();
   }
 
   ngOnInit(): void {
-    this.modalService.dismissAll();
-    this.negocioSVC.getData().subscribe(
+    this.subscription.add(this.negocioSVC.getData().subscribe(
       (res) => {
-        this.negocio = res[0];
+        this.negocio = res;
         if (this.negocio == null) {
           Swal.fire({
             icon: 'warning',
@@ -60,80 +68,92 @@ export class MiPerfilComponent implements OnInit, OnDestroy {
           });
         }
       }
-    );
-    this.authSVC.user$.subscribe(
-      (user) => {
-        this.usuario = {
-          nombre: user?.nombre,
-          apellido: user?.apellido,
-          email: user?.email,
-          perfil: user?.perfil
-        };
-        this.idUser = user?.userId;
-      }
-    );
+    ));
+
+    this.user = JSON.parse(localStorage.getItem('user'));
+    this.usuario = {
+      nombre: this.user.nombre,
+      apellido: this.user.apellido,
+      email: this.user.email,
+      perfil: this.user.perfil,
+      id: this.user.userId
+    };
   }
 
   open(content: any, flag: boolean) {
     if (flag == true) {
       this.negocioForm.setValue({
-        img: this.negocio?.imagen,
-        name: this.negocio?.nombre,
-        descripcion: this.negocio?.descripcion,
-        telefono: this.negocio?.telefono,
-        direccion: this.negocio?.direccion,
-        correo: this.negocio?.correo,
-        userId: this.idUser,
+        img: this.negocio.imagen,
+        name: this.negocio.nombre,
+        descripcion: this.negocio.descripcion,
+        telefono: this.negocio.telefono,
+        direccion: this.negocio.direccion,
+        correo: this.negocio.correo,
+        userId: this.usuario.id,
       })
       this.edit = true;
+    } else {
+      this.edit = false;
+      this.create = true;
     }
     this.baseError.base = this.negocioForm;
-    this.modalService.open(content);
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
   abrir(content: any) {
     this.adminForm.setValue({
-      apellido: this.usuario?.apellido,
-      nombre: this.usuario?.nombre,
-      imagen: this.usuario?.perfil,
-      username: this.usuario?.email
+      apellido: this.usuario.apellido,
+      nombre: this.usuario.nombre,
+      imagen: this.usuario.perfil,
+      username: this.usuario.email
     })
     this.baseError.base = this.adminForm;
-    this.modalService.open(content);
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' });
   }
 
   onSave() {
     if (!this.negocioForm.valid) {
       return;
     }
-    const formvalue = this.negocioForm.value;
-    this.negocioSVC.new(formvalue).subscribe(
-      (res) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Ok',
-          text: res.message
-        });
-        this.ngOnInit();
-        this.baseError.base = null;
-      }
-    );
+    if (this.create) {
+      const formvalue = this.negocioForm.value;
+      formvalue.userId = this.usuario.id;
+      this.subscription.add(this.negocioSVC.new(formvalue).subscribe(
+        (res) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
+          this.modalService.dismissAll();
+        }
+      ));
+      this.create = false;
+    } else {
+      console.log("equivocado 2");
+    }
+
   }
   onEdit() {
     if (!this.negocioForm.valid) {
       return;
     }
-    const formvalue = this.negocioForm.value;
-    this.negocioSVC.edit(formvalue).subscribe(
-      (res) => {
-        Swal.fire({
-          icon: 'success',
-          title: 'Ok',
-          text: res.message
-        });
-        this.ngOnInit();
-        this.baseError.base = null;
-      }
-    )
+    if (this.edit) {
+      const formvalue = this.negocioForm.value;
+      this.subscription.add(this.negocioSVC.edit(formvalue).subscribe(
+        (res) => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Ok',
+            text: res.message
+          });
+          this.ngOnInit();
+          this.modalService.dismissAll();
+        }
+      ));
+      this.edit = false;
+    } else {
+      console.log("equivocado");
+    }
   }
 
   editarPerfil() {
@@ -141,17 +161,16 @@ export class MiPerfilComponent implements OnInit, OnDestroy {
       return;
     }
     const formvalue = this.adminForm.value;
-    this.authSVC.editarPerfil(formvalue).subscribe(
+    this.subscription.add(this.authSVC.editarPerfil(formvalue).subscribe(
       (res) => {
         Swal.fire({
           icon: 'success',
           title: 'Ok',
           text: res.message
         });
-        this.ngOnInit();
-        this.baseError.base = null;
+        this.modalService.dismissAll();
       }
-    )
+    ));
   }
 
   checkField(field: string): boolean {
